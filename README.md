@@ -1,18 +1,15 @@
 ## AFVS - AdaptiveFlow for Virtual Screening
 
-
-
 Welcome to the AdaptiveFlow project!
 
-AdaptiveFlow ([Homepage](https://adaptive-flow.ai/)) is a versatile, parallel workflow platform for carrying out virtual screening-related tasks on Linux-based computer clusters of any type and size which are managed by a batchsystem (such as SLURM). 
+AdaptiveFlow ([Homepage](https://adaptive-flow.ai/)) is a versatile, parallel workflow platform for carrying out virtual screening-related tasks on Linux-based computer clusters of any type and size, which are managed by a batch system (such as SLURM). 
 
 Currently, there exist two versions of AdaptiveFlow, which are tailored to different types of tasks:
 
 - [AFLP: AdaptiveFlow for Ligand Preparation](https://github.com/LigandUniverse/AFLP)
 - [AFVS: AdaptiveFlow for Virtual Screenings](https://github.com/LigandUniverse/AFVS)
-
-They use the same core technology regarding workflow management and parallelization, and they can be used individually or in concert with each other. Additional versions are expected to arrive in the future. Pre-built, ready-to-dock ligand libraries for AFVS are available for free (in the download section). 
-
+- [AFU: AdaptiveFlow Unity](https://github.com/LigandUniverse/AFU)
+- [AFUparr: AdaptiveFlow Unity Parallel](https://github.com/LigandUniverse/AFUparr)
 
 
 ### Overview of Resources
