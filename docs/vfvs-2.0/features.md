@@ -1,0 +1,15 @@
+# Features
+
+Even while the virtual screening procedure is still running, VFVS 2.0 provides the possibility to see results in realtime for each docking scenario which was defined for the screening procedure. It can provide both statistical information regarding the docking scores of all docked ligands, as well as list the highest scoring compounds along with their highest score.
+
+## VFTools 2.0
+
+A separate tools-package (VFTools 2.0) for VirtualFlow 2.0 was created, which contains tools which can assist to create the ligand collections in the required layout (provided the ligands are already in the correct format), as well as to automatically postprocess and curate the output files.
+
+## Multistaging
+
+Due to the many options regarding the dockings scenarios, VFVS 2.0 is suitable for carrying out virtual screenings in a multistaged many. In each stage the accuracy (exhaustiveness, receptor flexibility, docking program, number of replicas, ...) of the dockings can be increased to rescore the highest scoring compounds from the previous stage to enhance the quality of the virtual screening at reduced computational costs.
+
+## Multiple Docking Scenarios
+
+VFVS 2.0 allows to carry out multiple docking scenarios per ligand. A docking scenario in VFVS 2.0 is defined by the receptor structure, by the docking parameters (such as exhaustiveness), rigid or flexible receptor docking, the choice of flexible receptor side chains or the docking program. This allows also for ensemble dockings.
