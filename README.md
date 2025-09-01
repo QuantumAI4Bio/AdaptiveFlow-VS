@@ -36,6 +36,6 @@ The project is distributed under the GNU GPL v2.0. Please see the file [LICENSE]
 
 ### AdaptiveFlow Forum
 
-If you need help or have any questions related to VirtualFlow, please use our forum: 
+If you need help or have any questions related to AdaptiveFlow, please use our forum: 
 
-* https://community.virtual-flow.org/
+* https://community.adaptiveflow.org/

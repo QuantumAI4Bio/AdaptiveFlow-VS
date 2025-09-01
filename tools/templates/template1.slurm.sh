@@ -3,20 +3,20 @@
 # Copyright (C) 2019 Christoph Gorgulla
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
-# This file is part of VirtualFlow.
+# This file is part of AdaptiveFlow.
 #
-# VirtualFlow is free software: you can redistribute it and/or modify
+# AdaptiveFlow is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# VirtualFlow is distributed in the hope that it will be useful,
+# AdaptiveFlow is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with VirtualFlow.  If not, see <https://www.gnu.org/licenses/>.
+# along with AdaptiveFlow.  If not, see <https://www.gnu.org/licenses/>.
 
 # ---------------------------------------------------------------------------
 #
@@ -46,26 +46,26 @@
 # If you are using a virtualenv, make sure the correct one 
 # is being activated
 
-source $HOME/vfvs_env/bin/activate
+source $HOME/afvs_env/bin/activate
 
 
 # Job Information -- generally nothing in this
 # section should be changed
 ##################################################################################
 
-export VFVS_WORKUNIT={{workunit_id}}
-export VFVS_JOB_STORAGE_MODE={{job_storage_mode}}
-export VFVS_WORKUNIT_SUBJOB=$SLURM_ARRAY_TASK_ID
-export VFVS_TMP_PATH=/dev/shm
-export VFVS_CONFIG_JOB_TGZ={{job_tgz}}
-export VFVS_TOOLS_PATH=${PWD}/bin
-export VFVS_VCPUS={{threads_to_use}}
+export AFVS_WORKUNIT={{workunit_id}}
+export AFVS_JOB_STORAGE_MODE={{job_storage_mode}}
+export AFVS_WORKUNIT_SUBJOB=$SLURM_ARRAY_TASK_ID
+export AFVS_TMP_PATH=/dev/shm
+export AFVS_CONFIG_JOB_TGZ={{job_tgz}}
+export AFVS_TOOLS_PATH=${PWD}/bin
+export AFVS_VCPUS={{threads_to_use}}
 
 ##################################################################################
 
-date +%s > {{batch_workunit_base}}/${VFVS_WORKUNIT_SUBJOB}.start
-./templates/vfvs_run.py
-date +%s > {{batch_workunit_base}}/${VFVS_WORKUNIT_SUBJOB}.end
+date +%s > {{batch_workunit_base}}/${AFVS_WORKUNIT_SUBJOB}.start
+./templates/afvs_run.py
+date +%s > {{batch_workunit_base}}/${AFVS_WORKUNIT_SUBJOB}.end
 
 
 

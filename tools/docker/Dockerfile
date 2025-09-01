@@ -1,19 +1,19 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 #
-# This file is part of VirtualFlow.
+# This file is part of AdaptiveFlow.
 #
-# VirtualFlow is free software: you can redistribute it and/or modify
+# AdaptiveFlow is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #
-# VirtualFlow is distributed in the hope that it will be useful,
+# AdaptiveFlow is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with VirtualFlow.  If not, see <https://www.gnu.org/licenses/>.
+# along with AdaptiveFlow.  If not, see <https://www.gnu.org/licenses/>.
 
 
 FROM amazonlinux:2
@@ -39,7 +39,7 @@ RUN wget -O boost_1_70_0.tar.gz https://boostorg.jfrog.io/artifactory/main/relea
     ./b2 install  --with-system --with-filesystem --with-thread --with-program_options || true && \
     ldconfig
 
-# Add VirtualFlow tools and templates
+# Add AdaptiveFlow tools and templates
 ADD ./bin /opt/vf/tools/bin
 ADD ./templates/*.py /opt/vf/tools/templates/
 ADD ./templates/*.sh /opt/vf/tools/templates/

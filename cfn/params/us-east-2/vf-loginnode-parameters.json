@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ProjectName",
-    "ParameterValue": "VirtualFlow-us-east-2"
+    "ParameterValue": "AdaptiveFlow-us-east-2"
   },
   {
     "ParameterKey": "MainNodeInstance",

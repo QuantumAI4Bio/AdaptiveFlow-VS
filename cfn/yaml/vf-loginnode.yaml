@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Sample template for launching VirtualFlow login node'
+Description: 'Sample template for launching AdaptiveFlow login node'
 Parameters:
   ProjectName:
     Type: String
@@ -133,7 +133,7 @@ Resources:
       Tags:
         - Key: Project
           Value: !Ref ProjectName
-      GroupDescription: "VirtualFlow Login node"
+      GroupDescription: "AdaptiveFlow Login node"
       VpcId:
         Fn::ImportValue:
           !Sub ${VPCStackParameter}-VPC
