@@ -1,6 +1,6 @@
 # Tutorial Overview
 
-The tutorials here are for AFVS (part of VirtualFlow 2.0). \
+The tutorials here are for AFVS (part of AdaptiveFlow). \
 \
 The following hands-on tutorials are available:
 
@@ -8,7 +8,7 @@ The following hands-on tutorials are available:
 
 More tutorials are planned for the future.
 
-Moreover, a demonstration video using VFVS 1.0 (an older version of VFVS) can be found on the VirtualFlow Homepage:
+Moreover, a demonstration video using AFVS 1.0 (an older version of AFVS) can be found on the AdaptiveFlow Homepage:
 
-* [https://virtual-flow.org/tutorials-vf1](https://virtual-flow.org/tutorials-vf1)&#x20;
+* [https://adaptiveflow.org/tutorials-vf1](https://adaptiveflow.org/tutorials-vf1)&#x20;
 

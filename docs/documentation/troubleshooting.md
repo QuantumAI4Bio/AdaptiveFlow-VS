@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Problems regarding VirtualFlow 2.0 and approaches to solving them can be classified into two categories:
+Problems regarding AdaptiveFlow and approaches to solving them can be classified into two categories:
 
 1. General problems, where the precise problem is yet to be determined.
 2. Specific problems, where the precise problem could already be determined.
@@ -25,7 +25,7 @@ Overview of general approaches:
 
 ### Increasing the Command-Verbosity
 
-The verbosity of the VirtualFlow 2.0 end-user commands (starting with `vflp_ or vfvs_`) can be increased by setting the option `verbosity_commands` in the control file to the value 'debug':
+The verbosity of the AdaptiveFlow end-user commands (starting with `aflp_ or afvs_`) can be increased by setting the option `verbosity_commands` in the control file to the value 'debug':
 
 ```
 verbosity_commands=debug
@@ -33,7 +33,7 @@ verbosity_commands=debug
 
 ### Inspecting log files and workflow files
 
-The verbosity of the VirtualFlow logfiles (in the `workflow/output-files/` folders) be increased by setting the option `verbosity_logfiles` in the control file to the value 'debug':
+The verbosity of the AdaptiveFlow logfiles (in the `workflow/output-files/` folders) be increased by setting the option `verbosity_logfiles` in the control file to the value 'debug':
 
 ```
 verbosity_logfiles=debug
@@ -48,9 +48,9 @@ In addition, the processing status of each ligand and possible errors related to
 
 ### Interactive Jobs
 
-Interactive jobs can for instance be useful when VirtualFlow 2.0 starts the workflow and begins using the local storage of the compute nodes, but then crashes and does not manage to copy back the log-files which are stored on the compute nodes. If this case, if one is running VirtualFlow 2.0 via an interactive job and is logged in to the compute node, one has immediate access to all the workflow files of VirtualFlow 2.0 on that compute node.&#x20;
+Interactive jobs can for instance be useful when AdaptiveFlow starts the workflow and begins using the local storage of the compute nodes, but then crashes and does not manage to copy back the log-files which are stored on the compute nodes. If this case, if one is running AdaptiveFlow via an interactive job and is logged in to the compute node, one has immediate access to all the workflow files of AdaptiveFlow on that compute node.&#x20;
 
-Similarly, one can run non-interactive jobs and then `ssh` into the the compute node which is used by VirtualFlow 2.0. However, this does not always work because if the job crashes and terminates, `ssh` access is often automatically terminated as well to that compute node (since one may not have any more job running on that node, which is often a requirement for `ssh` access to a compute node).
+Similarly, one can run non-interactive jobs and then `ssh` into the the compute node which is used by AdaptiveFlow. However, this does not always work because if the job crashes and terminates, `ssh` access is often automatically terminated as well to that compute node (since one may not have any more job running on that node, which is often a requirement for `ssh` access to a compute node).
 
 ## Specific Problems/Approaches
 

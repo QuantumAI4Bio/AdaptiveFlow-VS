@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Sample template for launching VirtualFlow in AWS Batch'
+Description: 'Sample template for launching AdaptiveFlow in AWS Batch'
 Parameters:
   ProjectName:
     Type: String
@@ -216,7 +216,7 @@ Resources:
                 Content-Type: text/x-shellscript; charset="us-ascii"
                 MIME-Version: 1.0
                 Content-Transfer-Encoding: 7bit
-                Content-Disposition: attachment; filename="vflp-ecs.txt"
+                Content-Disposition: attachment; filename="aflp-ecs.txt"
                 #
                 #!/bin/bash
                 echo ECS_IMAGE_PULL_BEHAVIOR=prefer-cached
@@ -242,12 +242,12 @@ Resources:
      
   ## Create a job definition
 
-  VFJobDefinition8vflp:
+  VFJobDefinition8aflp:
     Type: AWS::Batch::JobDefinition
     Properties:
       Tags: { "Project": !Ref ProjectName }
       PropagateTags: True
-      JobDefinitionName: !Sub ${AWS::StackName}-jobdef-vflp
+      JobDefinitionName: !Sub ${AWS::StackName}-jobdef-aflp
       Type: Container
       ContainerProperties:
               ResourceRequirements:
@@ -255,7 +255,7 @@ Resources:
                   Value: 8
                 - Type: "MEMORY"
                   Value: 14000
-              Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AWS::StackName}-vflp-ecr:latest"
+              Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AWS::StackName}-aflp-ecr:latest"
               LinuxParameters:
                       SharedMemorySize: !Sub ${SharedMemorySize}
       Timeout:
@@ -268,12 +268,12 @@ Resources:
                       - OnReason: "*"
                         Action: EXIT
 
-  VFJobDefinition8vfvs:
+  VFJobDefinition8afvs:
     Type: AWS::Batch::JobDefinition
     Properties:
       Tags: { "Project": !Ref ProjectName }
       PropagateTags: True
-      JobDefinitionName: !Sub ${AWS::StackName}-jobdef-vfvs
+      JobDefinitionName: !Sub ${AWS::StackName}-jobdef-afvs
       Type: Container
       ContainerProperties:
               ResourceRequirements:
@@ -281,7 +281,7 @@ Resources:
                   Value: 8
                 - Type: "MEMORY"
                   Value: 14000
-              Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AWS::StackName}-vfvs-ecr:latest"
+              Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${AWS::StackName}-afvs-ecr:latest"
               LinuxParameters:
                       SharedMemorySize: !Sub ${SharedMemorySize}
       Timeout:
@@ -295,21 +295,21 @@ Resources:
                         Action: EXIT
 
   ## Create the ECR repo
-  ContainerRepositoryVFLP:
+  ContainerRepositoryAFLP:
     Type: AWS::ECR::Repository
     Properties: 
       Tags:
         - Key: Project
           Value: !Ref ProjectName
-      RepositoryName: !Sub ${AWS::StackName}-vflp-ecr
+      RepositoryName: !Sub ${AWS::StackName}-aflp-ecr
 
-  ContainerRepositoryVFVS:
+  ContainerRepositoryAFVS:
     Type: AWS::ECR::Repository
     Properties: 
       Tags:
         - Key: Project
           Value: !Ref ProjectName
-      RepositoryName: !Sub ${AWS::StackName}-vfvs-ecr
+      RepositoryName: !Sub ${AWS::StackName}-afvs-ecr
 
   ## Security Groups ##
   

@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ProjectName",
-    "ParameterValue": "VirtualFlow-us-west-2"
+    "ParameterValue": "AdaptiveFlow-us-west-2"
   },
   {
     "ParameterKey": "VpcCidr0",

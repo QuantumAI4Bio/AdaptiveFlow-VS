@@ -1,15 +1,15 @@
 # Further Resources
 
-The following resources exist, besides this documentation, to obtain more information about VirtualFlow 2.0:
+The following resources exist, besides this documentation, to obtain more information about AdaptiveFlow:
 
-* The VirtualFlow homepage: [www.virtual-flow.org](https://virtualflow.gitbook.io/project/~/drafts/-LUuRo9PPYp6tQ3UJ6hN/primary/virtualflow-1/www.virtual-flow.org)​
-  * FAQ: [https://virtual-flow.org/faq](https://virtual-flow.org/faq)​
-  * Tutorials: [https://virtual-flow.org/tutorials](https://virtual-flow.org/tutorials)​
-* The GitHub repos/source code: [https://github.com/VirtualFlow](https://github.com/VirtualFlow)​
-* The forums/issue trackers of GitHub, which serve as forums for VirtualFlow for the moment.
-  * VFVS: [https://github.com/VirtualFlow/VFVS/issues](https://github.com/VirtualFlow/VFVS/issues)​
-  * VFLP: [https://github.com/VirtualFlow/VFLP/issues](https://github.com/VirtualFlow/VFLP/issues)​
-* Contacting us: [https://virtual-flow.org/about](https://virtual-flow.org/about)
+* The AdaptiveFlow homepage: [www.adaptiveflow.org](https://adaptiveflow.gitbook.io/project/~/drafts/-LUuRo9PPYp6tQ3UJ6hN/primary/adaptiveflow-1/www.adaptiveflow.org)​
+  * FAQ: [https://adaptiveflow.org/faq](https://adaptiveflow.org/faq)​
+  * Tutorials: [https://adaptiveflow.org/tutorials](https://adaptiveflow.org/tutorials)​
+* The GitHub repos/source code: [https://github.com/AdaptiveFlow](https://github.com/AdaptiveFlow)​
+* The forums/issue trackers of GitHub, which serve as forums for AdaptiveFlow for the moment.
+  * AFVS: [https://github.com/AdaptiveFlow/AFVS/issues](https://github.com/AdaptiveFlow/AFVS/issues)​
+  * AFLP: [https://github.com/AdaptiveFlow/AFLP/issues](https://github.com/AdaptiveFlow/AFLP/issues)​
+* Contacting us: [https://adaptiveflow.org/about](https://adaptiveflow.org/about)
 
 
 

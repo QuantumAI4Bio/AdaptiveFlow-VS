@@ -1,0 +1,9 @@
+# Running the ATG Primary Screen
+
+Now we are ready to start the jobs using the following command:&#x20;
+
+```
+./afvs_submit_jobs.py 1 500
+```
+
+Here we assumed that 500 is the number of workunits (please see the previous section on how you can obtain the correct number). The command will submit all workunits that were prepared (1 to 500) previously with the `afvs_prepare_workunits.py` command.&#x20;

@@ -41,9 +41,9 @@ The input and output ligand databases consist of a hierarchical file structure, 
 * Contains the actual ligand files in native format
 * This will be SMILES for AFLP and PDBQT files for AFVS
 * More details can be found in the corresponding sections:
-  * [AFLP - Input and Output Databases](../../vflp-2.0/background-and-principles/input-and-output-databases.md)
-  * [AFVS - Input and Output Databases](../../vfvs-2.0/background-and-principles/input-and-output-databases.md)
-  * [AFU - Input and Output Databases](../../vfu-2.0/background-and-principles/input-and-output-databases.md)
+  * [AFLP - Input and Output Databases](../../aflp/background-and-principles/input-and-output-databases.md)
+  * [AFVS - Input and Output Databases](../../afvs/background-and-principles/input-and-output-databases.md)
+  * [AFU - Input and Output Databases](../../afu/background-and-principles/input-and-output-databases.md)
 * The AFVS output database contains a fifths hierarchical level since for each ligand there can exist multiple docking output files
 
 ## Collection lengths file
@@ -56,7 +56,7 @@ For example the collection 01234 of tranche ABCA (of meta tranche AB) would have
 
 `ABCA_01234 1000`&#x20;
 
-The collection lengths file is needed to specify during the setup which ligand collections of the input database should be processed (i.e. which subset, since one does not always want to process all ligands of the input database). More details can be found in the section [_Preparing the Workflow - Preparing the Tools Folder - Central Task List._](../using-virtualflow-2.0/preparing-the-workflow.md#central-task-list)
+The collection lengths file is needed to specify during the setup which ligand collections of the input database should be processed (i.e. which subset, since one does not always want to process all ligands of the input database). More details can be found in the section [_Preparing the Workflow - Preparing the Tools Folder - Central Task List._](../using-adaptiveflow/preparing-the-workflow.md#central-task-list)
 
 
 
