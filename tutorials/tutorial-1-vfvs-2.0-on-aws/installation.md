@@ -2,7 +2,7 @@
 
 ## Setting up AWS Batch
 
-VFVS 2.0 on AWS uses an AWS Batch cluster and workload manager. Instructions on how to create the AWS Batch cluster, and how to access the AWS Batch login node can be found [here](https://github.com/VirtualFlow/VFVS/blob/vfvs-2/README-AWS.md#getting-started-with-virtualflow) on the VFVS GitHub page.
+AFVS on AWS uses an AWS Batch cluster and workload manager. Instructions on how to create the AWS Batch cluster, and how to access the AWS Batch login node can be found [here](https://github.com/VirtualFlow/VFVS/blob/vfvs-2/README-AWS.md#getting-started-with-virtualflow) on the VFVS GitHub page.
 
 {% hint style="info" %}
 You will need to have an AWS Account. If you don't have one yet, you can create a free one here: [https://aws.amazon.com/](https://aws.amazon.com/)&#x20;
@@ -53,9 +53,9 @@ Alternatively, all the above steps can be performed using `conda` instead of `pi
 
 For the remainder of the tutorial and for future use of VFVS, **please ensure the virtual environment is activated**.
 
-## Installing VFVS 2.0
+## Installing AFVS
 
-After Python is set up, we can install VFVS 2.0. Normally this is done by cloning the GitHub repo, but for this tutorial, we provide a pre-configured folder for download. On the AWS Batch login node, you can download it by running the following command:
+After Python is set up, we can install AFVS. Normally this is done by cloning the GitHub repo, but for this tutorial, we provide a pre-configured folder for download. On the AWS Batch login node, you can download it by running the following command:
 
 ```
 wget https://virtual-flow.org/sites/virtual-flow.org/files/tutorials/VFVS2_Tutorial1_Preconfigured_AWS_20240421.tar.gz

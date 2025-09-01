@@ -12,7 +12,7 @@ VFVS is one of the modules of VirtualFlow, dedicated to carrying out the virtual
 
 This tutorial will demonstrate the following:
 
-1. [How VFVS 2.0 can be installed](../tutorial-1-vfvs-2.0-on-aws/installation.md)
+1. [How AFVS can be installed](../tutorial-1-vfvs-2.0-on-aws/installation.md)
 2. [How the ATG Prescreen is prepared](../tutorial-1-vfvs-2.0-on-aws/setting-up-the-atg-prescreen.md)
 3. [How the ATG Prescreen is started](../tutorial-1-vfvs-2.0-on-aws/starting-the-atg-prescreen.md)
 4. [How the ATG Prescreen is monitored](../tutorial-1-vfvs-2.0-on-aws/monitoring-the-atg-prescreen.md)
@@ -21,7 +21,7 @@ This tutorial will demonstrate the following:
 7. [How the ATG primary screen is started](../tutorial-1-vfvs-2.0-on-aws/running-the-atg-primary-screen.md)
 8. [How the ATG primary screen is postprocessed](../tutorial-1-vfvs-2.0-on-aws/postprocessing-the-output-data.md)
 
-This tutorial covers the basic functionality of VFVS 2.0. Further information regarding specific aspects of VFVS can be found in the [documentation](https://app.gitbook.com/o/-LNuBCz49KX3ym-BKSfI/s/5gQohH1mDa6hgZMywzds/).
+This tutorial covers the basic functionality of AFVS. Further information regarding specific aspects of VFVS can be found in the [documentation](https://app.gitbook.com/o/-LNuBCz49KX3ym-BKSfI/s/5gQohH1mDa6hgZMywzds/).
 
 ## The Target
 

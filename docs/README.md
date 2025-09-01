@@ -8,29 +8,29 @@ Since resource managers can run on top of cloud computing platforms, VirtualFlow
 
 ## Modules
 
-Currently, there exist three VirtualFlow 2.0 modules, [**VFLP 2.0 (**&#x56;irtualFlow 2.0 for Ligand Preparation)](vflp-2.0/introduction.md), [**VFVS 2.0 (**&#x56;irtualFlow 2.0 for Virtual Screenings)](vfvs-2.0/introduction.md) and [**VFU 2.0** (VirtualFlow Unity 2.0)](vfu-2.0/introduction.md). These three modules share a common core technology, and therefore also a number of features. The documentation therefore exists of four parts, a general part for all versions of VirtualFlow 2.0, and one part for each VFLP 2.0, VFVS 2.0 and VFU 2.0:
+Currently, there exist three VirtualFlow 2.0 modules, [**AFLP (**&#x56;irtualFlow 2.0 for Ligand Preparation)](vflp-2.0/introduction.md), [**AFVS (**&#x56;irtualFlow 2.0 for Virtual Screenings)](vfvs-2.0/introduction.md) and [**AFU** (AdaptiveFlow Unity)](vfu-2.0/introduction.md). These three modules share a common core technology, and therefore also a number of features. The documentation therefore exists of four parts, a general part for all versions of VirtualFlow 2.0, and one part for each AFLP, AFVS and AFU:
 
-* [**VFLP 2.0:** VirtualFlow 2.0 for Ligand Preparation](vflp-2.0/introduction.md)
-* [**VFVS 2.0:** VirtualFlow 2.0 for Virtual Screenings](vfvs-2.0/introduction.md)
-* [**VFU 2.0**: VirtualFlow Unity 2.0](vfu-2.0/introduction.md)
+* [**AFLP:** VirtualFlow 2.0 for Ligand Preparation](vflp-2.0/introduction.md)
+* [**AFVS:** VirtualFlow 2.0 for Virtual Screenings](vfvs-2.0/introduction.md)
+* [**AFU**: AdaptiveFlow Unity](vfu-2.0/introduction.md)
 
-Information for each VirtualFlow 2.0 module and how to use it is therefore distributed in two different parts of the documentation (for instance information about VFVS 2.0 and how to use it is found in the general part called VirtualFlow 2.0, as well as in the part of the documentation dedicated to VFVS 2.0). The general information is not duplicated in the more specific parts, therefore the general part is always relevant.
+Information for each VirtualFlow 2.0 module and how to use it is therefore distributed in two different parts of the documentation (for instance information about AFVS and how to use it is found in the general part called VirtualFlow 2.0, as well as in the part of the documentation dedicated to AFVS). The general information is not duplicated in the more specific parts, therefore the general part is always relevant.
 
 ## Applications
 
 VirtualFlow 2.0 can be used for many steps relevant in the drug discovery process, such as:
 
-* **Ligand preparation (VFLP 2.0 & VFU 2.0)**
+* **Ligand preparation (AFLP & AFU)**
   * Preparation of general-purpose ligand databases, e.g. into a ready-to-dock format
   * Preparation of custom analog libraries based for hit/lead optimization\
 
-* **Hit identification (VFVS 2.0 & VFU 2.0)**
+* **Hit identification (AFVS & AFU)**
   * By virtually screening privately or publicly available ligand libraries\
 
-* **Hit/lead optimization (VFVS 2.0 & VFU 2.0)**
+* **Hit/lead optimization (AFVS & AFU)**
   * By screening custom libraries of analogs of certain hit/lead compounds\
 
-* **Binding site identification of experimental hits (VFVS 2.0 & VFU 2.0)**
+* **Binding site identification of experimental hits (AFVS & AFU)**
   * By carrying out extensive docking studies of the hit compounds
 
 ## Learning VirtualFlow 2.0

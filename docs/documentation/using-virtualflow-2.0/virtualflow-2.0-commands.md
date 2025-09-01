@@ -15,7 +15,7 @@ VirtualFlow 2.0 provides the following commands for users:
 
 ## Location
 
-All VirtualFlow 2.0 commands are all stored in the `tools` folder. These commands start with the prefix "`vflp_`" for the VFLP 2.0 module and the prefix "`vfvs_`" for the VFVS 2.0 module. The `tools` folder is also the primary working directory for any user-command available in VirtualFlow 2.0, meaning that all VirtualFlow 2.0 commands have to be executed while being in this folder.
+All VirtualFlow 2.0 commands are all stored in the `tools` folder. These commands start with the prefix "`vflp_`" for the AFLP module and the prefix "`vfvs_`" for the AFVS module. The `tools` folder is also the primary working directory for any user-command available in VirtualFlow 2.0, meaning that all VirtualFlow 2.0 commands have to be executed while being in this folder.
 
 ## Executing Commands
 

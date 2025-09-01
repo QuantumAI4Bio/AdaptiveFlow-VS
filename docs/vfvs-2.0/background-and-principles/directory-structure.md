@@ -2,7 +2,7 @@
 
 The structure of the `output-files` folder is described [here](../../documentation/backgrounds-and-principles/directory-structure.md#the-output-files-folder)[ ](../../documentation/backgrounds-and-principles/directory-structure.md)about VirtualFlow 2.0 in general.
 
-In the case of VFVS 2.0, the `output-files/incomplete` and `output-files/complete` folders. These folders contain for each docking scenario the following sub-folders:
+In the case of AFVS, the `output-files/incomplete` and `output-files/complete` folders. These folders contain for each docking scenario the following sub-folders:
 
 * `results`
 * `summaries`

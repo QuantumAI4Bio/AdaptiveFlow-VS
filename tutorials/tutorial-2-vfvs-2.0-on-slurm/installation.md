@@ -63,9 +63,9 @@ Alternatively, all the above steps can be performed using `conda` instead of `pi
 
 For the remainder of the tutorial and for future use of VFVS, **please ensure the virtual environment is activated**.
 
-## Installing VFVS 2.0
+## Installing AFVS
 
-After Python is set up, we can install VFVS 2.0. Normally this is done by cloning the GitHub repo, but for this tutorial, we provide a pre-configured folder for download which is available here:
+After Python is set up, we can install AFVS. Normally this is done by cloning the GitHub repo, but for this tutorial, we provide a pre-configured folder for download which is available here:
 
 On the AWS Batch login node, you can download it by running the following command:
 

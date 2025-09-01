@@ -13,17 +13,17 @@ To prepare VirtualFlow 2.0 for a workflow, the following needs to be done:
 
 As described [here](../backgrounds-and-principles/directory-structure.md) in the _Background and Principles_ section, the `input-files` folder only contains the input files which are used by the external programs which process the ligands in the workflow. The only exception can be the input ligand database, which can be stored in some other centralized location (to be shareable by multiple independent VirtualFlow workflows). However, if it is stored in the VirtualFlow 2.0 workflow folder, then the `input-files` folder is naturally the proper location. The location which is used is specified in the control file.&#x20;
 
-Currently, VFLP 2.0 does not require the input-files folder as described here:
+Currently, AFLP does not require the input-files folder as described here:
 
-* [VFLP 2.0 - Directory Structure - `input-files` folder](../../vflp-2.0/background-and-principles/directory-structure.md)
+* [AFLP - Directory Structure - `input-files` folder](../../vflp-2.0/background-and-principles/directory-structure.md)
 
-VFVS 2.0 does require the `input-files` folder for docking input files, as described here:
+AFVS does require the `input-files` folder for docking input files, as described here:
 
-* [VFVS 2.0 - Preparing the Workflow - `input-files` folder](../../vfvs-2.0/using-vfvs-2.0/preparing-the-workflow.md#preparation-of-the-input-files-folder)
+* [AFVS - Preparing the Workflow - `input-files` folder](../../vfvs-2.0/using-vfvs-2.0/preparing-the-workflow.md#preparation-of-the-input-files-folder)
 
-VFU 2.0 - does not require the input-files folder as described here:
+AFU - does not require the input-files folder as described here:
 
-* VFU 2.0 -&#x20;
+* AFU -&#x20;
 
 ## Preparation of the `tools` Folder
 
@@ -92,7 +92,7 @@ The following settings should be left unchanged, as they are handled internally 
 * number of cpus/gpus and job steps (can be set in the control file)
 * input/output log files
 
-Some clusters might require additional modules to be loaded, e.g. if OpenBabel which is used by VFLP 2.0 should be loaded as a module, it needs to go into the job template (see also [VFLP 2.0 - Installation - External Packages](../../vflp-2.0/installation/external-packages.md)).
+Some clusters might require additional modules to be loaded, e.g. if OpenBabel which is used by AFLP should be loaded as a module, it needs to go into the job template (see also [AFLP - Installation - External Packages](../../vflp-2.0/installation/external-packages.md)).
 
 ## Preparation of the`workflow` and `output-files` Folders
 
