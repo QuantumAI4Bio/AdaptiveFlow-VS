@@ -4,10 +4,10 @@
 
 To obtain the complete ranking of all ligands which were screened, the data in the output-files folder needs to be post processed. For this purpose, one can use the VFTools 2.0 package can be used, which can be installed as described [earlier](../../vftools-2.0/installation.md).
 
-At first, it is recommended to create a new folder `<VFVS 2.0 root directory>/pp/ranking`:
+At first, it is recommended to create a new folder `<AFVS root directory>/pp/ranking`:
 
 ```
-cd <VFVS 2.0 root directory>
+cd <AFVS root directory>
 mkdir -p pp/ranking
 cd pp/ranking
 ```
@@ -25,7 +25,7 @@ If one wants to obtain one or a few docking poses of some of the hits for furthe
 As an example, if we want to extract the docking poses of the top 100 hits of a docking scenario with name _'qvina02\_rigid\_receptor1'_ , then we can do this as follow. At first we create a new folder for the docking poses of this docking scenario:
 
 ```
-cd <VFVS 2.0 root directory>
+cd <AFVS root directory>
 mkdir -p pp/docking_poses/qvina02_rigid_receptor1
 cd pp/docking_poses/qvina02_rigid_receptor1
 ```

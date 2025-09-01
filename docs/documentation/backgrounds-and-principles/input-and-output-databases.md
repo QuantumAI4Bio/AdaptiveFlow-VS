@@ -9,7 +9,7 @@ The input and output ligand databases consist of a hierarchical file structure, 
 &#x20;           2 - Tranches\
 &#x20;                 3 - Collections\
 &#x20;                       4 - Ligands\
-&#x20;                             5 - Multiple files per ligand (VFVS 2.0 only)
+&#x20;                             5 - Multiple files per ligand (AFVS only)
 
 
 
@@ -39,12 +39,12 @@ The input and output ligand databases consist of a hierarchical file structure, 
 ## Level 4: Ligands
 
 * Contains the actual ligand files in native format
-* This will be SMILES for VFLP 2.0 and PDBQT files for VFVS 2.0
+* This will be SMILES for AFLP and PDBQT files for AFVS
 * More details can be found in the corresponding sections:
-  * [VFLP 2.0 - Input and Output Databases](../../vflp-2.0/background-and-principles/input-and-output-databases.md)
-  * [VFVS 2.0 - Input and Output Databases](../../vfvs-2.0/background-and-principles/input-and-output-databases.md)
-  * [VFU 2.0 - Input and Output Databases](../../vfu-2.0/background-and-principles/input-and-output-databases.md)
-* The VFVS 2.0 output database contains a fifths hierarchical level since for each ligand there can exist multiple docking output files
+  * [AFLP - Input and Output Databases](../../vflp-2.0/background-and-principles/input-and-output-databases.md)
+  * [AFVS - Input and Output Databases](../../vfvs-2.0/background-and-principles/input-and-output-databases.md)
+  * [AFU - Input and Output Databases](../../vfu-2.0/background-and-principles/input-and-output-databases.md)
+* The AFVS output database contains a fifths hierarchical level since for each ligand there can exist multiple docking output files
 
 ## Collection lengths file
 

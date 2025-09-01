@@ -2,7 +2,7 @@
 
 * [Tutorial Overview](README.md)
 
-## Tutorial 1: VFVS 2.0 on AWS
+## Tutorial 1: AFVS on AWS
 
 * [Introduction](tutorial-1-vfvs-2.0-on-aws/introduction.md)
 * [Installation of VFVS](tutorial-1-vfvs-2.0-on-aws/installation.md)
@@ -14,7 +14,7 @@
 * [Running the ATG Primary Screen](tutorial-1-vfvs-2.0-on-aws/running-the-atg-primary-screen.md)
 * [Postprocessing the ATG Primary Screen](tutorial-1-vfvs-2.0-on-aws/postprocessing-the-output-data.md)
 
-## Tutorial 2: VFVS 2.0 on Slurm
+## Tutorial 2: AFVS on Slurm
 
 * [Introduction](tutorial-2-vfvs-2.0-on-slurm/introduction.md)
 * [Installation of VFVS](tutorial-2-vfvs-2.0-on-slurm/installation.md)

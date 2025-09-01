@@ -1,6 +1,6 @@
 # External Packages
 
-VFLP 2.0 requires three external packages to be installed:&#x20;
+AFLP requires three external packages to be installed:&#x20;
 
 1. [Java](external-packages.md#java)
 2. [Nailgun](external-packages.md#nailgun)
@@ -14,9 +14,9 @@ OpenBabel in the[ prerequisites section](prerequisities.md) is not classified as
 
 ## Java
 
-Java (for Linux) needs to be provided to VFLP 2.0 as a gzipped tarball (i.e. a tar.gz-archive). The minimum version required is 8. OpenJDK (a popular version of Java) can be found at [https://jdk.java.net](https://jdk.java.net).&#x20;
+Java (for Linux) needs to be provided to AFLP as a gzipped tarball (i.e. a tar.gz-archive). The minimum version required is 8. OpenJDK (a popular version of Java) can be found at [https://jdk.java.net](https://jdk.java.net).&#x20;
 
-The reason that a local version has to be provided is that VFLP 2.0 will install it locally on the compute nodes on the temporary file system (which is specified in the control file) in order to reduce the I/O load of the cluster as well as for increasing the performance.
+The reason that a local version has to be provided is that AFLP will install it locally on the compute nodes on the temporary file system (which is specified in the control file) in order to reduce the I/O load of the cluster as well as for increasing the performance.
 
 The root folder in the tar.gz-archive has to have the name `java`. This means that the package most likely has to be modified by the user (since the root folder varies between java distributions), at first by unpacking it:
 
@@ -36,19 +36,19 @@ And then repacking the java distribution:
 tar -cvzf java11.tar.gz java
 ```
 
-The name of the final tar.gz file can be freely chosen, and has to be specified in the VFLP 2.0 config file.&#x20;
+The name of the final tar.gz file can be freely chosen, and has to be specified in the AFLP config file.&#x20;
 
 Finally, the package can be stored in the folder `<vf-root>/tools/packages.`
 
 ## Nailgun
 
-Nailgun is a java program which provides a persistent Java virtual machine. For VFLP 2.0, it provides an extreme speedup of usually more than an order of magnitude (in particular when using JChem's tools as the first choice over OpenBabel).
+Nailgun is a java program which provides a persistent Java virtual machine. For AFLP, it provides an extreme speedup of usually more than an order of magnitude (in particular when using JChem's tools as the first choice over OpenBabel).
 
 Nailgun can be downloaded via GitHub:
 
 * [https://github.com/facebook/nailgun](https://github.com/facebook/nailgun)
 
-After downloading the ZIP-archive, it needs to be modified by the user in order to be ready to be used by VFLP 2.0. In particular, the root folder needs to be renamed, and the package stored in the tar.gz format. For this purpose, the archive is at first uncompressed by:
+After downloading the ZIP-archive, it needs to be modified by the user in order to be ready to be used by AFLP. In particular, the root folder needs to be renamed, and the package stored in the tar.gz format. For this purpose, the archive is at first uncompressed by:
 
 ```
 unzip nailgun-master.zip
@@ -66,13 +66,13 @@ And finally, the folder is repackaged into the tar.gz format:
 tar -cvzf nailgun.tar.gz nailgun
 ```
 
-The name of the nailgun archive can be chosen freely, as it has to be specified in the VFLP 2.0 control file.
+The name of the nailgun archive can be chosen freely, as it has to be specified in the AFLP control file.
 
 In the end, the package has to be placed in the folder `<vf-root>/tools/packages`
 
 ## ChemAxon's JChemSuite
 
-VFLP 2.0 can use ChemAxon's JChemSuite for carrying out several steps of the molecule preparations, though Open Babel can currently be used as well instead. _**A suitable academic or commercial license needs to be obtained from ChemAxon directly.**_ The licence file has to be stored in the folder `tools/packages/`,  and the name of the license file has to be specified in control file via the variable `chemaxon_license_filename`.
+AFLP can use ChemAxon's JChemSuite for carrying out several steps of the molecule preparations, though Open Babel can currently be used as well instead. _**A suitable academic or commercial license needs to be obtained from ChemAxon directly.**_ The licence file has to be stored in the folder `tools/packages/`,  and the name of the license file has to be specified in control file via the variable `chemaxon_license_filename`.
 
 The JChemSuite package can be downloaded here from ChemAxon's homepage after registration:
 
@@ -80,7 +80,7 @@ The JChemSuite package can be downloaded here from ChemAxon's homepage after reg
 
 The version which has to be selected is "JChem Base" in the platform independent ZIP format.
 
-For VFLP 2.0 the package has to be reformatted again, at first by extracting and renaming the root folder to `jchemsuite`, and then by creating a tar.gz archive:
+For AFLP the package has to be reformatted again, at first by extracting and renaming the root folder to `jchemsuite`, and then by creating a tar.gz archive:
 
 ```
 unzip jchem_platform_independent_18.30.zip

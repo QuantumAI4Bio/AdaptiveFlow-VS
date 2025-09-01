@@ -4,7 +4,7 @@
 
 Each VirtualFlow 2.0 module can be installed and used individually. And it needs to be installed for each workflow that is run. Meaning, that if two workflows are to be run in parallel on a cluster, the VirtualFlow modules will be installed in two freely choosable folders, and the workflow will run in each of them separately.
 
-A VirtualFlow 2.0 module (VFLP 2.0, VFVS 2.0, and VFU 2.0) can be installed via one of two ways:
+A VirtualFlow 2.0 module (AFLP, AFVS, and AFU) can be installed via one of two ways:
 
 * [Via a tarball (tar.gz archive)](virtualflow-2.0.md#tarball-installation)
 * [Via Git/GitHub](virtualflow-2.0.md#cloning-the-github-repository)
@@ -24,43 +24,43 @@ When using AWS Batch: The home folder of the login should be used. The preconfig
 
 The tar-archive versions of VirtualFlow 2.0 modules can be downloaded from the VirtualFlow homepage:
 
-* VFLP 2.0: [https://virtual-flow.org/vflp-downloads](https://virtual-flow.org/vflp-downloads)
-* VFVS 2.0: [https://virtual-flow.org/vfvs-downloads](https://virtual-flow.org/vfvs-downloads)
-* VFU 2.0:&#x20;
+* AFLP: [https://virtual-flow.org/vflp-downloads](https://virtual-flow.org/vflp-downloads)
+* AFVS: [https://virtual-flow.org/vfvs-downloads](https://virtual-flow.org/vfvs-downloads)
+* AFU:&#x20;
 
 
 
-The files can also be obtained directly via the `wget` command, in the case of VFLP 2.0:
+The files can also be obtained directly via the `wget` command, in the case of AFLP:
 
 ```
 wget -O VFLP.tar.gz https://github.com/VirtualFlow/VFLP/archive/python-develop.tar.gz
 ```
 
-In the case of VFVS 2.0:
+In the case of AFVS:
 
 ```
 wget -O VFVS.tar.gz https://github.com/VirtualFlow/VFVS/archive/python-develop.tar.gz
 ```
 
-And in the case of VFU 2.0:
+And in the case of AFU:
 
 ```
 wget -O VFU.tar.gz https://github.com/VirtualFlow/VFU/archive/refs/heads/main.tar.gz
 ```
 
-After downloading the tar-archive, it can be simply installed by extracting it on the desired location. In the case of VFLP 2.0:
+After downloading the tar-archive, it can be simply installed by extracting it on the desired location. In the case of AFLP:
 
 ```
 tar -xvzf VFLP-python-develop.tar.gz
 ```
 
-In the case of VFVS 2.0:
+In the case of AFVS:
 
 ```
 tar -xvzf VFVS-python-develop.tar.gz
 ```
 
-And in the case of VFU 2.0:
+And in the case of AFU:
 
 ```
 tar -xvzf VFU-main.tar.gz
@@ -68,19 +68,19 @@ tar -xvzf VFU-main.tar.gz
 
 ## Cloning the GitHub Repository
 
-VirtualFlow 2.0 can also be installed by cloning the GitHub repository. In the case of VFLP 2.0:
+VirtualFlow 2.0 can also be installed by cloning the GitHub repository. In the case of AFLP:
 
 ```
 git clone git@github.com:VirtualFlow/VFLP.git
 ```
 
-&#x20;In the case of VFVS 2.0:
+&#x20;In the case of AFVS:
 
 ```
 git clone git@github.com:VirtualFlow/VFVS.git
 ```
 
-&#x20;And in the case of VFU 2.0:
+&#x20;And in the case of AFU:
 
 ```
 git clone git@github.com:VirtualFlow/VFU.git

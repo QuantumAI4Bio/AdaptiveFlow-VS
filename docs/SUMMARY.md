@@ -25,7 +25,7 @@
 * [Version History](documentation/version-history.md)
 * [Further Resources](documentation/further-resources.md)
 
-## VFLP 2.0
+## AFLP
 
 * [Introduction](vflp-2.0/introduction.md)
 * [Features](vflp-2.0/features.md)
@@ -35,11 +35,11 @@
 * [Background and Principles](vflp-2.0/background-and-principles/README.md)
   * [Directory Structure](vflp-2.0/background-and-principles/directory-structure.md)
   * [Input & Output Databases](vflp-2.0/background-and-principles/input-and-output-databases.md)
-* [Using VFLP 2.0](vflp-2.0/using-vflp-2.0.md)
+* [Using AFLP](vflp-2.0/using-vflp-2.0.md)
 * [Troubleshooting](vflp-2.0/troubleshooting.md)
 * [Version History](vflp-2.0/version-history.md)
 
-## VFVS 2.0
+## AFVS
 
 * [Introduction](vfvs-2.0/introduction.md)
 * [Features](vfvs-2.0/features.md)
@@ -49,14 +49,14 @@
   * [Directory Structure](vfvs-2.0/background-and-principles/directory-structure.md)
   * [Input & Output Databases](vfvs-2.0/background-and-principles/input-and-output-databases.md)
 * [Supported docking programs and scoring functions](vfvs-2.0/supported-docking-programs-and-scoring-functions.md)
-* [Using VFVS 2.0](vfvs-2.0/using-vfvs-2.0/README.md)
+* [Using AFVS](vfvs-2.0/using-vfvs-2.0/README.md)
   * [Preparing the Workflow](vfvs-2.0/using-vfvs-2.0/preparing-the-workflow.md)
   * [Monitoring the Workflow](vfvs-2.0/using-vfvs-2.0/monitoring-the-workflow.md)
   * [The Completed Workflow](vfvs-2.0/using-vfvs-2.0/the-completed-workflow.md)
 * [Troubleshooting](vfvs-2.0/troubleshooting.md)
 * [Version History](vfvs-2.0/version-history.md)
 
-## VFU 2.0
+## AFU
 
 * [Introduction](vfu-2.0/introduction.md)
 * [Features](vfu-2.0/features.md)

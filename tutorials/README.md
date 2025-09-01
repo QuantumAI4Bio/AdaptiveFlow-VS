@@ -1,10 +1,10 @@
 # Tutorial Overview
 
-The tutorials here are for VFVS 2.0 (part of VirtualFlow 2.0). \
+The tutorials here are for AFVS (part of VirtualFlow 2.0). \
 \
 The following hands-on tutorials are available:
 
-* [Tutorial 1: VFVS 2.0 - Preconfigured Example for AWS](broken-reference)
+* [Tutorial 1: AFVS - Preconfigured Example for AWS](broken-reference)
 
 More tutorials are planned for the future.
 

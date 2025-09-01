@@ -2,11 +2,11 @@
 
 ## General
 
-In addition to the general preparation which is required for any VirtualFlow 2.0 module as describe [here](../../documentation/installation/), for VFVS 2.0 the `input-files` folder needs to be set up as described [below](preparing-the-workflow.md#preparation-of-the-input-files-folder). The exemplified step-by-step preparation can be found in the [Tutorials](broken-reference).
+In addition to the general preparation which is required for any VirtualFlow 2.0 module as describe [here](../../documentation/installation/), for AFVS the `input-files` folder needs to be set up as described [below](preparing-the-workflow.md#preparation-of-the-input-files-folder). The exemplified step-by-step preparation can be found in the [Tutorials](broken-reference).
 
 ## Preparation of the `input-files` Folder
 
-For using VFVS 2.0, a set of docking scenarios and scoring functions has to be set up by the user, and it can be any number of them. This is done in the `input-files` folder, which contains the following items:
+For using AFVS, a set of docking scenarios and scoring functions has to be set up by the user, and it can be any number of them. This is done in the `input-files` folder, which contains the following items:
 
 * Configuration files for the docking programs
 * Receptor structures
@@ -33,7 +33,7 @@ where all the receptor structures which are used are stored. Different docking s
 
 The ligand database to be used can be stored in any location, and the location can be specified in the control file.&#x20;
 
-The required ligand input database can be prepared either from scratch with VFLP 2.0, or a ready-made database can be used. For virtual screenings, most users would use a ready-made database. For this purpose, we are providing the REAL database from Enamine, which can be downloaded here from the VirtualFlow website:&#x20;
+The required ligand input database can be prepared either from scratch with AFLP, or a ready-made database can be used. For virtual screenings, most users would use a ready-made database. For this purpose, we are providing the REAL database from Enamine, which can be downloaded here from the VirtualFlow website:&#x20;
 
 * [https://virtual-flow.org/real-library](https://virtual-flow.org/real-library)
 

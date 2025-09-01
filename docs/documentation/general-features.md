@@ -2,9 +2,9 @@
 
 The following describes the features of VirtualFlow 2.0 in general. The features specific to each VirtualFlow 2.0 module are described in the corresponding chapters:
 
-* [VFLP 2.0 - Features](../vflp-2.0/features.md)
-* [VFVS 2.0 - Features](../vfvs-2.0/features.md)
-* [VFU 2.0 - Features](../vfu-2.0/features.md)
+* [AFLP - Features](../vflp-2.0/features.md)
+* [AFVS - Features](../vfvs-2.0/features.md)
+* [AFU - Features](../vfu-2.0/features.md)
 
 ## **Scaling Behavior**
 

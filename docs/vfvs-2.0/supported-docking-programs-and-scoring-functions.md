@@ -1,6 +1,6 @@
 # Supported docking programs and scoring functions
 
-VFVS 2.0 supports many docking programs and scoring functions that run on both CPUs and GPUs. For using docking programs and scoring functions on GPUs, please modify the job submission file (`/tools/templates/template1.slurm.sh`) to indicate access to GPU nodes for running docking. To use a specific docking program or a scoring function of interest, the following modification may be required:&#x20;
+AFVS supports many docking programs and scoring functions that run on both CPUs and GPUs. For using docking programs and scoring functions on GPUs, please modify the job submission file (`/tools/templates/template1.slurm.sh`) to indicate access to GPU nodes for running docking. To use a specific docking program or a scoring function of interest, the following modification may be required:&#x20;
 
 1. Properly install the executable binary programs.&#x20;
 2. Modify the `all.ctrl` file located in the `tools/templates` directory to specify the format of the ligands to be screened and the name of the docking program to be used.&#x20;

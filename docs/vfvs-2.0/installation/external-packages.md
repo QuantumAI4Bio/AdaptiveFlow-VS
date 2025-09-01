@@ -2,7 +2,7 @@
 
 ## Docking Programs
 
-VirtualFlow 2.0 supports many docking programs working on CPUs and GPUs. For some of the docking programs, the executable binary programs (for x86 the architecture) are included in the VFVS 2.0 package, and thus don't need to to be installed (when x86 compatible compute nodes are used, which is normally the case). For other docking programs whose executable binary programs are not included in the VFVS 2.0 package, an executable program needs to be put into the directory `/tools/bin.` Currently, the docking programs that are supported by VirtualFlow 2.0 are listed below, with those require an external package highlighted in bold:&#x20;
+VirtualFlow 2.0 supports many docking programs working on CPUs and GPUs. For some of the docking programs, the executable binary programs (for x86 the architecture) are included in the AFVS package, and thus don't need to to be installed (when x86 compatible compute nodes are used, which is normally the case). For other docking programs whose executable binary programs are not included in the AFVS package, an executable program needs to be put into the directory `/tools/bin.` Currently, the docking programs that are supported by VirtualFlow 2.0 are listed below, with those require an external package highlighted in bold:&#x20;
 
 * [**AutoDock-GPU**](../supported-docking-programs-and-scoring-functions.md#autodock-gpu)
 * [**AutoDock4/AutoDock-CPU**](../supported-docking-programs-and-scoring-functions.md#autodock4-autodock-cpu)
@@ -52,7 +52,7 @@ VirtualFlow 2.0 supports many docking programs working on CPUs and GPUs. For som
 The pre-compiled executables are the ones which are provided by the original creators of these programs. This means that the more efficient binaries might be obtained when recompiling them from the source code with settings optimized for the  precise architecture which will be used.
 {% endhint %}
 
-When self-compiled binaries should be used by VFVS 2.0, the pre-compiled binaries in the `tools/bin` folder need to be replaced by the new binaries.
+When self-compiled binaries should be used by AFVS, the pre-compiled binaries in the `tools/bin` folder need to be replaced by the new binaries.
 
 ## Scoring functions
 

@@ -1,8 +1,8 @@
-# Using VFLP 2.0
+# Using AFLP
 
-The usage of VFLP 2.0 is the same as the usage of VirtualFlow 2.0 in general, which is described [here](../documentation/using-virtualflow-2.0/).&#x20;
+The usage of AFLP is the same as the usage of VirtualFlow 2.0 in general, which is described [here](../documentation/using-virtualflow-2.0/).&#x20;
 
-All specific options/features which one can activate/configure in VFLP 2.0 are described in the control file `tools/templates/all.ctrl`, where the values for all of them can be specified. These options/features include:
+All specific options/features which one can activate/configure in AFLP are described in the control file `tools/templates/all.ctrl`, where the values for all of them can be specified. These options/features include:
 
 * Neutralization
 * Desalting
