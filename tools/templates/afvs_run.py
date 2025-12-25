@@ -4069,7 +4069,7 @@ def setup_job_storage_mode(ctx):
         ctx['s3'] = boto3.client('s3', config=botoconfig)
     
     elif(ctx['job_storage_mode'] == "sharedfs"):
-        ctx['job_tar'] = os.getenv('AFVS_CONFIG_JOB_TGZ')
+        ctx['job_tar'] = os.getenv('AFVS_CONFIG_JOB_OBJECT')
     else:
         raise RuntimeError(f"Invalid jobstoragemode of {ctx['job_storage_mode']}. AFVS_JOB_STORAGE_MODE must be 's3' or 'sharedfs' ")
 

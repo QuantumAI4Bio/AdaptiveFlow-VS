@@ -54,10 +54,11 @@ source $HOME/afvs_env/bin/activate
 ##################################################################################
 
 export AFVS_WORKUNIT={{workunit_id}}
-export AFVS_JOB_STORAGE_MODE={{job_storage_mode}}
+export AFVS_JOB_STORAGE_MODE="{{ job_storage_mode }}"
+export AFVS_CONFIG_JOB_BUCKET="{{ job_bucket }}"
+export AFVS_CONFIG_JOB_OBJECT="{{ job_tgz }}"
 export AFVS_WORKUNIT_SUBJOB=$SLURM_ARRAY_TASK_ID
 export AFVS_TMP_PATH=/dev/shm
-export AFVS_CONFIG_JOB_TGZ={{job_tgz}}
 export AFVS_TOOLS_PATH=${PWD}/bin
 export AFVS_VCPUS={{threads_to_use}}
 

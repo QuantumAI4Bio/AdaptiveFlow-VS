@@ -114,6 +114,11 @@ def submit_slurm(config, client, current_workunit, jobline):
 
 
     #
+    if config['job_storage_mode'] == 's3':
+        job_tgz = current_workunit['s3_download_path']
+    else:
+        job_tgz = current_workunit['download_path']
+
     template_values = {
         "job_letter": config['job_letter'],
         "job_name": config['job_name'],
@@ -125,8 +130,9 @@ def submit_slurm(config, client, current_workunit, jobline):
         "slurm_partition": config['slurm_partition'],
         "workunit_id": jobline_str,
         "job_storage_mode": config['job_storage_mode'],
+        "job_bucket": config.get('object_store_job_bucket', ''),
         "slurm_array_job_throttle": config['slurm_array_job_throttle'],
-        "job_tgz": current_workunit['download_path'],
+        "job_tgz": job_tgz,
         "batch_workunit_base": batch_workunit_base.resolve().as_posix()
     }
     render_output = slurm_template.render(template_values)
