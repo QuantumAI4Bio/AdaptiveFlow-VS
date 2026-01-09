@@ -1,3 +1,7 @@
+---
+hidden: true
+---
+
 # AFTools
 
 ## General
@@ -6,9 +10,4 @@ For some tasks, such as preparing initial ligand databases, and postprocessing t
 
 * [https://github.com/AdaptiveFlow/AFTools](https://github.com/AdaptiveFlow/AFTools)
 
-More information can be found in the corresponding chapter [below](../../aftools/introduction.md).&#x20;
-
-
-
-
-
+More information can be found in the corresponding chapter [below](../../aftools/introduction.md).

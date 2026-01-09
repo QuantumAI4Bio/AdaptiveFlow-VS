@@ -22,13 +22,7 @@ When using AWS Batch: The home folder of the login should be used. The preconfig
 
 ## Tarball Installation
 
-The tar-archive versions of AdaptiveFlow modules can be downloaded from the AdaptiveFlow homepage:
-
-* AFLP: [https://adaptive-flow.ai/aflp-downloads](https://adaptiveflow.org/aflp-downloads)
-* AFVS: [https://adaptive-flow.ai/afvs-downloads](https://adaptiveflow.org/afvs-downloads)
-* AFU: [https://adaptive-flow.ai/afu-downloads](https://adaptiveflow.org/afvs-downloads)
-
-The files can also be obtained directly via the `wget` command, in the case of AFLP:
+The tar-archive versions of AdaptiveFlow modules can be downloaded directly via the `wget` command. In the case of AFLP:
 
 ```
 wget -O AFLP.tar.gz https://github.com/LigandUniverse/AFLP/archive/refs/heads/develop.tar.gz
