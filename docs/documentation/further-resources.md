@@ -2,14 +2,12 @@
 
 The following resources exist, besides this documentation, to obtain more information about AdaptiveFlow:
 
-* The AdaptiveFlow homepage: [www.adaptiveflow.org](https://adaptiveflow.gitbook.io/project/~/drafts/-LUuRo9PPYp6tQ3UJ6hN/primary/adaptiveflow-1/www.adaptiveflow.org)​
-  * FAQ: [https://adaptiveflow.org/faq](https://adaptiveflow.org/faq)​
-  * Tutorials: [https://adaptiveflow.org/tutorials](https://adaptiveflow.org/tutorials)​
-* The GitHub repos/source code: [https://github.com/AdaptiveFlow](https://github.com/AdaptiveFlow)​
+* The AdaptiveFlow homepage: [www.adaptive-flow.ai](https://adaptive-flow.ai/)
+  * FAQ: [https://adaptive-flow.ai/faq​](https://adaptive-flow.ai/faq%E2%80%8B)
+  * Tutorials: [https://adaptive-flow.ai/tutorials​](https://adaptive-flow.ai/tutorials-vf2)
+* The GitHub repos/source code: [https://github.com/LigandUniverse](https://github.com/LigandUniverse)
 * The forums/issue trackers of GitHub, which serve as forums for AdaptiveFlow for the moment.
-  * AFVS: [https://github.com/AdaptiveFlow/AFVS/issues](https://github.com/AdaptiveFlow/AFVS/issues)​
-  * AFLP: [https://github.com/AdaptiveFlow/AFLP/issues](https://github.com/AdaptiveFlow/AFLP/issues)​
-* Contacting us: [https://adaptiveflow.org/about](https://adaptiveflow.org/about)
-
-
+  * AFVS: [https://github.com/LigandUniverse/AFVS/issues​](https://github.com/LigandUniverse/AFVS/issues)
+  * AFLP: [https://github.com/LigandUniverse/AFLP/issues](https://github.com/LigandUniverse/AFLP/issues)​
+* Contacting us: [https://adaptive-flow.ai/about](https://adaptive-flow.ai/about)
 

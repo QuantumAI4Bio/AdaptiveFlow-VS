@@ -22,20 +22,17 @@ AdaptiveFlow can be used for many steps relevant in the drug discovery process, 
 
 * **Ligand preparation (AFLP & AFU)**
   * Preparation of general-purpose ligand databases, e.g. into a ready-to-dock format
-  * Preparation of custom analog libraries based for hit/lead optimization\
-
+  * Preparation of custom analog libraries based for hit/lead optimization
 * **Hit identification (AFVS & AFU)**
-  * By virtually screening privately or publicly available ligand libraries\
-
+  * By virtually screening privately or publicly available ligand libraries
 * **Hit/lead optimization (AFVS & AFU)**
-  * By screening custom libraries of analogs of certain hit/lead compounds\
-
+  * By screening custom libraries of analogs of certain hit/lead compounds
 * **Binding site identification of experimental hits (AFVS & AFU)**
   * By carrying out extensive docking studies of the hit compounds
 
 ## Learning AdaptiveFlow
 
-AdaptiveFlow tries to make virtual screening-related tasks on computer clusters and cloud computing platforms as simple as possible. But because each cluster and computing platform is different, it still can take some time to learn everything you need to know. In particular, the following topics are relevant:&#x20;
+AdaptiveFlow tries to make virtual screening-related tasks on computer clusters and cloud computing platforms as simple as possible. But because each cluster and computing platform is different, it still can take some time to learn everything you need to know. In particular, the following topics are relevant:
 
 * _Linux/Bash:_ You should be comfortable with using the Linux command line, in particular Bash. There are many online tutorials available, such as [this](https://www.tldp.org/LDP/Bash-Beginners-Guide/html/Bash-Beginners-Guide.html) one.
 * _Linux Clusters/Resource Managers:_ You need to be comfortable with using the cluster you want to use (at the moment Slurm and AWS Batch are supported). Often, the institution which provides/manages the cluster regularly offers free user training sessions for beginners which one can take part in.
@@ -46,6 +43,3 @@ AdaptiveFlow tries to make virtual screening-related tasks on computer clusters 
 If you are new to Linux, the command line, and/or computer clusters, and need to learn the basics, it might take a week or two to learn everything you need to know to use AdaptiveFlow efficiently.
 
 If you are already comfortable with the Linux command line and computer cluster or AWS, learning AdaptiveFlow is relatively simple. However, it still will need some initial time (a few days) to understand how everything works and to be able to use it efficiently. But once you know everything, using AdaptiveFlow will become a breeze.
-
-
-

@@ -2,7 +2,7 @@
 
 ## Docking Programs
 
-AdaptiveFlow supports many docking programs working on CPUs and GPUs. For some of the docking programs, the executable binary programs (for x86 the architecture) are included in the AFVS package, and thus don't need to to be installed (when x86 compatible compute nodes are used, which is normally the case). For other docking programs whose executable binary programs are not included in the AFVS package, an executable program needs to be put into the directory `/tools/bin.` Currently, the docking programs that are supported by AdaptiveFlow are listed below, with those require an external package highlighted in bold:&#x20;
+AdaptiveFlow supports many docking programs working on CPUs and GPUs. For some of the docking programs, the executable binary programs (for x86 the architecture) are included in the AFVS package, and thus don't need to to be installed (when x86 compatible compute nodes are used, which is normally the case). For other docking programs whose executable binary programs are not included in the AFVS package, an executable program needs to be put into the directory `/tools/bin.` Currently, the docking programs that are supported by AdaptiveFlow are listed below, with those require an external package highlighted in bold:
 
 * [**AutoDock-GPU**](../supported-docking-programs-and-scoring-functions.md#autodock-gpu)
 * [**AutoDock4/AutoDock-CPU**](../supported-docking-programs-and-scoring-functions.md#autodock4-autodock-cpu)
@@ -49,14 +49,14 @@ AdaptiveFlow supports many docking programs working on CPUs and GPUs. For some o
 * [**Vina-Gpu-2.0**](../supported-docking-programs-and-scoring-functions.md#vina-gpu-2.0)
 
 {% hint style="info" %}
-The pre-compiled executables are the ones which are provided by the original creators of these programs. This means that the more efficient binaries might be obtained when recompiling them from the source code with settings optimized for the  precise architecture which will be used.
+The pre-compiled executables are the ones which are provided by the original creators of these programs. This means that the more efficient binaries might be obtained when recompiling them from the source code with settings optimized for the precise architecture which will be used.
 {% endhint %}
 
 When self-compiled binaries should be used by AFVS, the pre-compiled binaries in the `tools/bin` folder need to be replaced by the new binaries.
 
 ## Scoring functions
 
-AdaptiveFlow supports various scoring functions which can be used to score and rank the compounds whose binding poses to the target have been docked by a docking program of interest. Currently, the following scoring functions that are supported by AdaptiveFlow are listed below, with those require an external package highlighted in bold:&#x20;
+AdaptiveFlow supports various scoring functions which can be used to score and rank the compounds whose binding poses to the target have been docked by a docking program of interest. Currently, the following scoring functions that are supported by AdaptiveFlow are listed below, with those require an external package highlighted in bold:
 
 * [NNScore2.0](../supported-docking-programs-and-scoring-functions.md#scoring-with-nnscore2.0)
 * [**rf-score-vs**](../supported-docking-programs-and-scoring-functions.md#scoring-with-rf-score-vs)
@@ -65,5 +65,3 @@ AdaptiveFlow supports various scoring functions which can be used to score and r
 * [AutoDock4](../supported-docking-programs-and-scoring-functions.md#scoring-with-autodock4)
 * [Vinandro](../supported-docking-programs-and-scoring-functions.md#scoring-with-vinandro)
 * [Vina](../supported-docking-programs-and-scoring-functions.md#scoring-with-vina)
-
-##
