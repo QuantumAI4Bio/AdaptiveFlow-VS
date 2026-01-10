@@ -1,7 +1,6 @@
-# Installing AdaptiveFlow2.0
+# Installing AdaptiveFlow
 
-After you have logged in to your compute node, begin by cloning the afvs-2 branch and enter the newly created directory: \
-
+After you have logged in to your compute node, begin by cloning the afvs-2 branch and enter the newly created directory: \\
 
 `git clone -b afvs-2 https://github.com/AdaptiveFlow/AFVS/`
 
@@ -9,14 +8,14 @@ After you have logged in to your compute node, begin by cloning the afvs-2 branc
 
 Create and activate a python virtual environment (all work should be done inside the virtual env):\
 \
-`python3 -m virtualenv $HOME/afvs_env` \
+`python3 -m virtualenv $HOME/afvs_env`\
 `source $HOME/afvs_env/bin/activate`
 
 Install various packages needed for AdaptiveFlow2.0:\
 \
 `python3 -m pip install boto3 pandas pyarrow jinja2`
 
-After installation is complete, install AWS-CLI: \
+After installation is complete, install AWS-CLI:\
 \
 First, let's make sure that no prior version of AWS-CLI is installed:\
 \
@@ -26,19 +25,19 @@ Next, download the archive:\
 \
 `curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"`\
 \
-When finished, simply unzip the archive: \
+When finished, simply unzip the archive:\
 \
 `unzip awscliv2.zip`\
 \
-and install: \
+and install:\
 \
 `sudo ./aws/install`\
 \
-To check that your installation is successful, you can run: \
+To check that your installation is successful, you can run:\
 \
 `aws --version`
 
-The above command should generate an output similar to: \
+The above command should generate an output similar to:\
 \
 `aws-cli/2.15.1 Python/3.11.6 Linux/5.15.0-1031-gcp exe/x86_64.ubuntu.22 prompt/off`\
 \
@@ -46,7 +45,7 @@ Next you must configure AWS-CLI:\
 \
 `aws configure`\
 \
-You have to define the following (the keys should match the ones you use in your local version of aws-cli):&#x20;
+You have to define the following (the keys should match the ones you use in your local version of aws-cli):
 
 `AWS Access Key ID [None]:`\
 `AWS Secret Access Key [None]:`\
@@ -54,7 +53,3 @@ You have to define the following (the keys should match the ones you use in your
 `Default output format [None]:`\
 \
 Congratulations, you now have a fully configured version of VF2.0! We will now proceed to the next step, setting up a docking run.
-
-
-
-\

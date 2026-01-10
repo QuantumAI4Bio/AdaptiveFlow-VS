@@ -1,7 +1,5 @@
 ---
-description: >-
-  This is the first tutorial for AdaptiveFlow for Virtual Screening 2.0 (AFVS
-  2.0).
+description: This is the first tutorial for AdaptiveFlow for Virtual Screening.
 ---
 
 # Introduction
@@ -25,7 +23,7 @@ This tutorial covers the basic functionality of AFVS. Further information regard
 
 ## The Target
 
-The target structure in this tutorial is human glucokinase (GK), and the purpose of the screening is to find activating compounds (see [Petit _et al._](http://scripts.iucr.org/cgi-bin/paper?S0907444911036729) for background information). The structure used has the following protein data bank identification (PDB ID): 4NO7 ([https://www.rcsb.org/structure/4NO7](https://www.rcsb.org/structure/4NO7)).&#x20;
+The target structure in this tutorial is human glucokinase (GK), and the purpose of the screening is to find activating compounds (see [Petit _et al._](http://scripts.iucr.org/cgi-bin/paper?S0907444911036729) for background information). The structure used has the following protein data bank identification (PDB ID): 4NO7 ([https://www.rcsb.org/structure/4NO7](https://www.rcsb.org/structure/4NO7)).
 
 ![Human glucokinase (GK). The structure shown has PDB ID 4NO7.](<../.gitbook/assets/Screenshot at 2019-03-18 08-06-11.png>)
 
@@ -46,9 +44,4 @@ The pre-configured docking box is shown below:
 
 ![](<../.gitbook/assets/Screenshot at 2019-03-18 08-03-18.png>)
 
-Details on how to prepare the docking input files for Autodock Vina-based programs can for example be found at [http://vina.scripps.edu](http://vina.scripps.edu/).&#x20;
-
-
-
-
-
+Details on how to prepare the docking input files for Autodock Vina-based programs can for example be found at [http://vina.scripps.edu](http://vina.scripps.edu/).
