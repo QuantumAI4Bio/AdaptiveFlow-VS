@@ -96,7 +96,7 @@ def publish_workunit(ctx, index, workunit_subjobs):
     # Generate the tarball
 
     out = tarfile.open(f'{temp_dir_tar.name}/{index}.tar.gz', mode='x:gz')
-    out.add(temp_dir.name, arcname="vf_input")
+    out.add(temp_dir.name, arcname="af_input")
     out.close()
 
     if(ctx['config']['job_storage_mode'] == "s3"):

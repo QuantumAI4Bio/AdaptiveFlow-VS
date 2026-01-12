@@ -4,7 +4,7 @@ description: 'First, we should download the tutorial files:'
 
 # Screening the sparse library with AdaptiveFlow
 
-wget https://adaptiveflow.org/sites/adaptiveflow.org/files/tutorials/AFVS\_GK.tar
+wget https://adaptive-flow.ai/sites/adaptive-flow.ai/files/tutorials/AFVS\_GK.tar
 
 
 
@@ -17,7 +17,7 @@ From the resulting folder, copy the following files to the AFVS folder: \
 \
 `cp -v -r ./AFVS_GK/input-files/qvina02_rigid_receptor1/ AFVS_GK/input-files/receptor/ ~/AFVS/input-files/`\
 \
-Upload the _Enamine\_REAL\_Space\_2022q12\_sparse.todo_ file, containing the sparse version of the VF library:\
+Upload the _Enamine\_REAL\_Space\_2022q12\_sparse.todo_ file, containing the sparse version of the AF library:\
 
 
 {% file src="../../.gitbook/assets/Enamine_REAL_Space_2022q12_sparse.todo" %}

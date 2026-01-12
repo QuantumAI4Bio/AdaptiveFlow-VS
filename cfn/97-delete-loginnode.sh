@@ -8,6 +8,6 @@ then
     exit
 fi
 
-aws cloudformation delete-stack --stack-name vf-loginnode \
+aws cloudformation delete-stack --stack-name af-loginnode \
 --region ${REGION}
 

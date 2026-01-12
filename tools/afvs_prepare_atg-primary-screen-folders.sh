@@ -61,31 +61,31 @@ echo
 for ds in $(cat ../workflow/config.json  | jq -r ".docking_scenario_names" | tr "," " " | tr -d '"\n[]' | tr -s " "); do
   for screening_size in "${screening_sizes[@]}"; do
     for replica_count in "${replica_counts[@]}"; do
-      new_vf_root_folder="../../atg-primaryscreen_${ds}_${screening_size}_repl${replica_count}"
-      echo "Creating new VF directory (${new_vf_root_folder}) for the ATG Primary Screen of docking scenrio ${ds} for screening size ${screening_size}, and ${replica_count} replicas"
-      mkdir ${new_vf_root_folder}
-      mkdir ${new_vf_root_folder}/input-files/
-      cp -r ../.git* ../tools/ ${new_vf_root_folder}/
-      cp -r ../input-files/receptors/ ${new_vf_root_folder}/input-files/
-      cp -r ../input-files/${ds}/ ${new_vf_root_folder}/input-files/
-      echo "Copying the newly created todo file for docking scenario ${ds}: cp ../output-files/${ds}.todo.${screening_size} ${new_vf_root_folder}/tools/templates/todo.all"
-      cp ../output-files/${ds}.todo.${screening_size} ${new_vf_root_folder}/tools/templates/todo.all
+      new_af_root_folder="../../atg-primaryscreen_${ds}_${screening_size}_repl${replica_count}"
+      echo "Creating new AF directory (${new_af_root_folder}) for the ATG Primary Screen of docking scenrio ${ds} for screening size ${screening_size}, and ${replica_count} replicas"
+      mkdir ${new_af_root_folder}
+      mkdir ${new_af_root_folder}/input-files/
+      cp -r ../.git* ../tools/ ${new_af_root_folder}/
+      cp -r ../input-files/receptors/ ${new_af_root_folder}/input-files/
+      cp -r ../input-files/${ds}/ ${new_af_root_folder}/input-files/
+      echo "Copying the newly created todo file for docking scenario ${ds}: cp ../output-files/${ds}.todo.${screening_size} ${new_af_root_folder}/tools/templates/todo.all"
+      cp ../output-files/${ds}.todo.${screening_size} ${new_af_root_folder}/tools/templates/todo.all
       echo "Setting job_name in the all.ctrl file to atg-primaryscreen_${ds}_${screening_size}_repl${replica_count}"
-      sed -i "s/job_name=.*/job_name=atg-primaryscreen_${ds}_${screening_size}_repl${replica_count}/g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s/job_name=.*/job_name=atg-primaryscreen_${ds}_${screening_size}_repl${replica_count}/g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting data_collection_identifier in the all.ctrl file to Enamine_REAL_Space_2022q12"
-      sed -i "s|data_collection_identifier=.*|data_collection_identifier=Enamine_REAL_Space_2022q12|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|data_collection_identifier=.*|data_collection_identifier=Enamine_REAL_Space_2022q12|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting prescreen_mode in the all.ctrl file to 0"
-      sed -i "s|prescreen_mode=.*|prescreen_mode=0|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|prescreen_mode=.*|prescreen_mode=0|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting dynamic_tranche_filtering in the all.ctrl file to 0"
-      sed -i "s|dynamic_tranche_filtering=.*|dynamic_tranche_filtering=0|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|dynamic_tranche_filtering=.*|dynamic_tranche_filtering=0|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting docking_scenario_names in the all.ctrl file to ${ds}"
-      sed -i "s|docking_scenario_names=.*|docking_scenario_names=${ds}|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|docking_scenario_names=.*|docking_scenario_names=${ds}|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting docking_scenario_batchsizes in the all.ctrl file to 1"
-      sed -i "s|docking_scenario_batchsizes=.*|docking_scenario_batchsizes=1|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|docking_scenario_batchsizes=.*|docking_scenario_batchsizes=1|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting docking_scenario_replicas in the all.ctrl file to ${replica_count}"
-      sed -i "s|docking_scenario_replicas=.*|docking_scenario_replicas=${replica_count}|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|docking_scenario_replicas=.*|docking_scenario_replicas=${replica_count}|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo "Setting docking_scenario_methods in the all.ctrl file to ${docking_scenario_method}"
-      sed -i "s|docking_scenario_methods=.*|docking_scenario_methods=${docking_scenario_method}|g" ${new_vf_root_folder}/tools/templates/all.ctrl
+      sed -i "s|docking_scenario_methods=.*|docking_scenario_methods=${docking_scenario_method}|g" ${new_af_root_folder}/tools/templates/all.ctrl
       echo
     done
   done

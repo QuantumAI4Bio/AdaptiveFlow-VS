@@ -8,7 +8,7 @@ The following hands-on tutorials are available:
 
 More tutorials are planned for the future.
 
-Moreover, a demonstration video using AFVS 1.0 (an older version of AFVS) can be found on the AdaptiveFlow Homepage:
+Moreover, a demonstration video using VFVS (an older version of AFVS) can be found on the AdaptiveFlow Homepage:
 
-* [https://adaptiveflow.org/tutorials-vf1](https://adaptiveflow.org/tutorials-vf1)&#x20;
+* [https://adaptive-flow.ai/tutorials-vf1](https://adaptive-flow.ai/tutorials-vf1)&#x20;
 

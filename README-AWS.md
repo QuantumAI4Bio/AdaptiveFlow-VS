@@ -14,12 +14,12 @@ AWS CloudFormation templates allow us to describe infrastructure as code and thi
 
 Settings are in `params/<region>/`
 * `vpc-parameters.json` -- VPC setup
-* `vf-parameters.json` -- Batch infrastructure setup
-* `vf-loginnode-parameters.json` -- Login node setup
+* `af-parameters.json` -- Batch infrastructure setup
+* `af-loginnode-parameters.json` -- Login node setup
 
 At a minimum the following two parameters should be updated:
-* `S3BucketName` is the name of the bucket created in the previous step. (`vf-parameters.json` and `vf-loginnode-parameters.json`)
-* `KeyName` refers to the EC2 SSH key that you will use to login to the main node that this creates. (``vf-loginnode-parameters.json``)
+* `S3BucketName` is the name of the bucket created in the previous step. (`af-parameters.json` and `af-loginnode-parameters.json`)
+* `KeyName` refers to the EC2 SSH key that you will use to login to the main node that this creates. (``af-loginnode-parameters.json``)
 
 
 All scripts require the AWS region name as the first argument.
@@ -74,7 +74,7 @@ If the status returned from a command is `ROLLBACK_COMPLETE` this means that the
 aws cloudformation describe-stack-events --region <region> --stack-name <stackname>
 ```
 
-The `<stackname>` will be `vf-vpc` for the networking stack, `vf` for the Batch resources, and `vf-loginnode` for the login node
+The `<stackname>` will be `af-vpc` for the networking stack, `af` for the Batch resources, and `af-loginnode` for the login node
 
 
 ## Getting Started with AdaptiveFlow Virtual Screening (AFVS)
@@ -122,7 +122,7 @@ This format is used for the latest version of the REAL dataset. (If you already 
 Login to the main node and execute the following to obtain the latest version of the code.
 
 ```bash
-git clone https://github.com/AdaptiveFlow/AFVS.git -b python-develop
+git clone https://github.com/LigandUniverse/AFVS.git -b python-develop
 cd AFVS
 ```
 
@@ -140,11 +140,11 @@ Job Configuration:
 
 AWS Batch-specific Configuration:
 
-- `aws_batch_prefix`: Prefix for the name of the AWS Batch queues. This is normally 'vf' if you used the CloudFormation template
+- `aws_batch_prefix`: Prefix for the name of the AWS Batch queues. This is normally 'af' if you used the CloudFormation template
 - `aws_batch_number_of_queues`: Should be set to the number of queues that are setup for AWS Batch. Generally this number is 1 unless you have a large-scale (100K+ vCPUs) setup
 - `aws_batch_jobdef`: Generally this is [aws_batch_prefix]-jobdef-afvs
 - `aws_batch_array_job_size`: Target for the number of jobs that should be in a single array job for AWS Batch.
-- `aws_ecr_repository_name`: Set it to the name of the Elastic Container Registry (ECR) repository (e.g. vf-afvs-ecr) in your AWS account (If you used the template it is generally vf-afvs-ecr)
+- `aws_ecr_repository_name`: Set it to the name of the Elastic Container Registry (ECR) repository (e.g. af-afvs-ecr) in your AWS account (If you used the template it is generally af-afvs-ecr)
 - `aws_region`: Set to the AWS location code where you are running AWS Batch (e.g. us-east-2 for North America, Ohio)
 - `aws_batch_subjob_vcpus`: Set to the number of vCPUs that should be launched per subjob. 'threads_to_use' above should be >= to this value.
 - `aws_batch_subjob_memory`: Memory per subjob to setup for the container in MB.
@@ -351,7 +351,7 @@ The data can be found in the bucket specified under:
 
 ```
 ./97-delete-loginnode.sh <region>
-./98-delete-vf.sh <region>
+./98-delete-af.sh <region>
 ```
 
 Note that you cannot delete the VPC until the previous two

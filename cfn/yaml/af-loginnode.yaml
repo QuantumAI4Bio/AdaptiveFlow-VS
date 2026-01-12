@@ -28,7 +28,7 @@ Resources:
   S3Policy:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: !Sub ${AWS::StackName}-${AWS::Region}-VFS3Access
+      PolicyName: !Sub ${AWS::StackName}-${AWS::Region}-AFS3Access
       PolicyDocument:
         Version: "2012-10-17"
         Statement:

@@ -15,16 +15,16 @@ then
 	exit;
 fi
 
-if [[ ! -e params/${REGION}/vf-vpc-parameters.json ]];
+if [[ ! -e params/${REGION}/af-vpc-parameters.json ]];
 then
-	echo "ERROR: params/${REGION}/vf-vpc-parameters.json is not setup yet"
+	echo "ERROR: params/${REGION}/af-vpc-parameters.json is not setup yet"
 	exit;
 fi
 
 
-aws cloudformation create-stack --stack-name vf-vpc \
+aws cloudformation create-stack --stack-name af-vpc \
 --template-body file://yaml/${REGION}/vpc.yaml \
 --capabilities CAPABILITY_NAMED_IAM \
---parameters file://params/${REGION}/vf-vpc-parameters.json \
+--parameters file://params/${REGION}/af-vpc-parameters.json \
 --region ${REGION}
 

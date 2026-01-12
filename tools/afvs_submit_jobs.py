@@ -165,7 +165,7 @@ def submit_slurm(config, client, current_workunit, jobline):
         raise Exception("sbatch did not return successfully")
 
     current_workunit['status'] = {
-        'vf_job_status': 'SUBMITTED',
+        'af_job_status': 'SUBMITTED',
         'job_name': f"afvs-{config['job_letter']}-{jobline_str}", 
         'job_id': job_id
     }

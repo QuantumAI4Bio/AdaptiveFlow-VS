@@ -6,7 +6,7 @@ AFLP requires three external packages to be installed:&#x20;
 2. [Nailgun](external-packages.md#nailgun)
 3. [ChemAxon's JChemSuite](external-packages.md#chemaxons-jchemsuite)
 
-have to be provided within the AdaptiveFlow directory, more precisely the directory `<vf-root>/tools/packages.`
+have to be provided within the AdaptiveFlow directory, more precisely the directory `<af-root>/tools/packages.`
 
 AdaptiveFlow will then install and use these packages automatically.
 
@@ -38,7 +38,7 @@ tar -cvzf java11.tar.gz java
 
 The name of the final tar.gz file can be freely chosen, and has to be specified in the AFLP config file.&#x20;
 
-Finally, the package can be stored in the folder `<vf-root>/tools/packages.`
+Finally, the package can be stored in the folder `<af-root>/tools/packages.`
 
 ## Nailgun
 
@@ -68,7 +68,7 @@ tar -cvzf nailgun.tar.gz nailgun
 
 The name of the nailgun archive can be chosen freely, as it has to be specified in the AFLP control file.
 
-In the end, the package has to be placed in the folder `<vf-root>/tools/packages`
+In the end, the package has to be placed in the folder `<af-root>/tools/packages`
 
 ## ChemAxon's JChemSuite
 
@@ -88,7 +88,7 @@ mv jchem jchemsuite
 tar -cvzf jchemsuite.tar.gz jchemsuite
 ```
 
-The tar.gz archive can now be stored in the folder `<vf-root>/tools/packages/`.
+The tar.gz archive can now be stored in the folder `<af-root>/tools/packages/`.
 
 
 

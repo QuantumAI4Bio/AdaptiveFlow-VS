@@ -12,7 +12,7 @@ pwd
 
 This shows the current folder, also known as the directory, where you are located. The first step is to navigate to the appropriate directory in the supercomputing cluster workspace where AdaptiveFlow will be installed.
 
-AdaptiveFlow should be installed on **a fast shared scratch file system** rather than the home directory. The reasoning behind this and further information regarding the installation of AdaptiveFlow can be found within the "AdaptiveFlow" subsection located in the "[Installation](https://docs.adaptiveflow.org/documentation/-LdE8RH9UN4HKpckqkX3/installation/aflp#installation-location)" section of the [documentation](https://app.gitbook.com/o/-LNuBCz49KX3ym-BKSfI/s/-LNuBCz54OweSMdPmK2T/).
+AdaptiveFlow should be installed on **a fast shared scratch file system** rather than the home directory. The reasoning behind this and further information regarding the installation of AdaptiveFlow can be found within the "AdaptiveFlow" subsection located in the "[Installation](https://docs.adaptive-flow.ai/documentation/-LdE8RH9UN4HKpckqkX3/installation/aflp#installation-location)" section of the [documentation](https://app.gitbook.com/o/-LNuBCz49KX3ym-BKSfI/s/-LNuBCz54OweSMdPmK2T/).
 
 After choosing the directory where you want AFVS and the workflow to be located, go to this directory. This can be done by entering the following command:
 
@@ -70,7 +70,7 @@ After Python is set up, we can install AFVS. Normally this is done by cloning th
 On the AWS Batch login node, you can download it by running the following command:
 
 ```
-wget https://adaptiveflow.org/sites/adaptiveflow.org/files/tutorials/AFVS%202%20-%20Tutorial%201%20-%20Preconfigured%20-%20Slurm.tar.gz
+wget https://adaptive-flow.ai/sites/adaptive-flow.ai/files/tutorials/AFVS%202%20-%20Tutorial%201%20-%20Preconfigured%20-%20Slurm.tar.gz
 ```
 
 This preconfigured folder was prepared by:
@@ -151,4 +151,4 @@ Default region name [None]:us-east-2
 Default output format [None]:
 ```
 
-Congratulations, you now have a fully configured version of VF2.0! We will now proceed to the next step, setting up a docking run.
+Congratulations, you now have a fully configured version of AdaptiveFlow! We will now proceed to the next step, setting up a docking run.

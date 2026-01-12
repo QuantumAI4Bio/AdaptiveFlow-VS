@@ -1,9 +1,9 @@
-# Installing AdaptiveFlow2.0
+# Installing AdaptiveFlow
 
 After you have logged in to your compute node, begin by cloning the afvs-2 branch and enter the newly created directory: \
 
 
-`git clone -b afvs-2 https://github.com/AdaptiveFlow/AFVS/`
+`git clone -b afvs-2 https://github.com/LigandUniverse/AFVS/`
 
 `cd AFVS`
 
@@ -53,7 +53,7 @@ You have to define the following (the keys should match the ones you use in your
 `Default region name [None]: us-east-2`\
 `Default output format [None]:`\
 \
-Congratulations, you now have a fully configured version of VF2.0! We will now proceed to the next step, setting up a docking run.
+Congratulations, you now have a fully configured version of AdaptiveFlow! We will now proceed to the next step, setting up a docking run.
 
 
 

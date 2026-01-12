@@ -9,22 +9,22 @@ then
 fi
 
 
-if [[ ! -e yaml/vf-loginnode.yaml ]];
+if [[ ! -e yaml/af-loginnode.yaml ]];
 then
-	echo "ERROR: yaml/vf-loginnode.yaml is not setup yet"
+	echo "ERROR: yaml/af-loginnode.yaml is not setup yet"
 	exit;
 fi
 
-if [[ ! -e params/${REGION}/vf-loginnode-parameters.json ]];
+if [[ ! -e params/${REGION}/af-loginnode-parameters.json ]];
 then
-	echo "ERROR: params/${REGION}/vf-loginnode-parameters.json is not setup yet"
+	echo "ERROR: params/${REGION}/af-loginnode-parameters.json is not setup yet"
 	exit;
 fi
 
 
-aws cloudformation create-stack --stack-name vf-loginnode \
---template-body file://yaml/vf-loginnode.yaml \
+aws cloudformation create-stack --stack-name af-loginnode \
+--template-body file://yaml/af-loginnode.yaml \
 --capabilities CAPABILITY_NAMED_IAM \
---parameters file://params/${REGION}/vf-loginnode-parameters.json \
+--parameters file://params/${REGION}/af-loginnode-parameters.json \
 --region ${REGION}
 

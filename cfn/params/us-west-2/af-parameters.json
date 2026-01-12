@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ProjectName",
-    "ParameterValue": "AdaptiveFlow-us-east-2"
+    "ParameterValue": "AdaptiveFlow-us-west-2"
   },
   {
     "ParameterKey": "AllocationStrategy",
@@ -9,7 +9,7 @@
   },
   {
     "ParameterKey": "CEInstanceTypes",
-    "ParameterValue": "c5.24xlarge,c5.4xlarge,c5.12xlarge,c5.9xlarge,c5.18xlarge,c5n.18xlarge,c5n.9xlarge,c5n.4xlarge,c6i.12xlarge,c6i.24xlarge,c6i.16xlarge,c6i.12xlarge"
+    "ParameterValue": "c5.24xlarge,c5.4xlarge,c5.12xlarge,c5.9xlarge,c5.18xlarge,c5n.18xlarge,c5n.9xlarge,c5n.4xlarge"
   },
   {
     "ParameterKey": "CEType",
@@ -25,7 +25,7 @@
   },
   {
     "ParameterKey": "VPCStackParameter",
-    "ParameterValue": "vf-vpc"
+    "ParameterValue": "af-vpc"
   },
   {
     "ParameterKey": "ContainerTimeout",
