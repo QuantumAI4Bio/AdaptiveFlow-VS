@@ -29,8 +29,8 @@ batchsystem=awsbatch
 ### To use AWS Batch you must first complete the steps outlined 
 ### in the user guide for AWS Batch 
 
-aws_batch_prefix=vf
-# Prefix for the name of the AWS Batch queues. This is normally 'vf'
+aws_batch_prefix=af
+# Prefix for the name of the AWS Batch queues. This is normally 'af'
 # if you used the CloudFormation template
 
 aws_batch_number_of_queues=1
@@ -38,17 +38,17 @@ aws_batch_number_of_queues=1
 # Generally this number is 1 unless you have a large-scale (100K+ vCPUs)
 # setup
 
-aws_batch_jobdef=vf-jobdef-afvs
+aws_batch_jobdef=af-jobdef-afvs
 # Generally this is [aws_batch_prefix]-jobdef-afvs
-# (e.g. if aws_batch_prefix=vf, then aws_batch_jobdef=vf-jobdef-afvs
+# (e.g. if aws_batch_prefix=af, then aws_batch_jobdef=af-jobdef-afvs
 
 aws_batch_array_job_size=200
 # Target for the number of jobs that should be in a single array job for AWS Batch.
 
-aws_ecr_repository_name=vf-afvs-ecr
+aws_ecr_repository_name=af-afvs-ecr
 # Set it to the name of the Elastic Container Registry (ECR) 
-# repository (e.g. vf-afvs-ecr) in your AWS account
-# (If you used the template it is generally vf-afvs-ecr)
+# repository (e.g. af-afvs-ecr) in your AWS account
+# (If you used the template it is generally af-afvs-ecr)
 
 aws_region=us-east-2
 # Set to the AWS location code where you are running AWS Batch
@@ -144,7 +144,7 @@ job_addressing_mode=metatranche
 object_store_job_bucket=
 # Bucket name for the job data (output and job files)
 
-object_store_job_prefix=VF2/AFVS/jobs
+object_store_job_prefix=AF/AFVS/jobs
 # Where to place job-specific data. This includes where AdaptiveFlow will place 
 # the input data needed for jobs as well as the output files. 
 #

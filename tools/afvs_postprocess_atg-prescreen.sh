@@ -32,7 +32,7 @@ done
 # Creating subset of the CSV files
 for ds in $(cat ../workflow/config.json  | jq -r ".docking_scenario_names" | tr "," " " | tr -d '"\n[]' | tr -s " "); do
   echo "Creating a subset of the ranking file with fewer columns and storing it in ../output-files/${ds}.subset-1.csv.gz ..."
-  awk 'BEGIN { FS=OFS="," } { gsub("_", ",", $2); print }' ${ds}.ranking.complete.csv | awk -F ',' '{print $2","$3","$1","$5}' | sed "1s/.*/Tranche,Collection,LigandVFID,ScoreMin/" | tr -d '"' | pigz -c > ${ds}.ranking.subset-1.csv.gz
+  awk 'BEGIN { FS=OFS="," } { gsub("_", ",", $2); print }' ${ds}.ranking.complete.csv | awk -F ',' '{print $2","$3","$1","$5}' | sed "1s/.*/Tranche,Collection,LigandAFID,ScoreMin/" | tr -d '"' | pigz -c > ${ds}.ranking.subset-1.csv.gz
 done
 
 # Compressing the complete ranking files

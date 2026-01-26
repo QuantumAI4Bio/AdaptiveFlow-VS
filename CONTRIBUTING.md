@@ -39,12 +39,12 @@ We aspire to create a welcoming environment for collaboration on this project. T
 
 The following gives an overview of the various resources related to AdaptiveFlow:
 
-- [Homepage of AdaptiveFlow](https://adaptiveflow.org/)
-- [The documentation of AdaptiveFlow](https://docs.adaptiveflow.org/documentation/-LdE8RH9UN4HKpckqkX3/)
-- [Tutorials for AdaptiveFlow](https://adaptiveflow.org/tutorials)
-- [Feature Requests (powered by Canny)](http://feedback.adaptiveflow.org/feature-requests)
-- [GitHub Issue Tracker for AFVS](https://github.com/AdaptiveFlow/AFVS/issues)
-- [GitHub Issue Tracker for AFLP](https://github.com/AdaptiveFlow/AFLP/issues)
+- [Homepage of AdaptiveFlow](https://adaptive-flow.ai/)
+- [The documentation of AdaptiveFlow](https://docs.virtual-flow.org/documentation-vf2)
+- [Tutorials for AdaptiveFlow](https://adaptive-flow.ai/tutorials)
+- [Feature Requests (powered by Canny)](https://feedback.virtual-flow.org/feature-requests)
+- [GitHub Issue Tracker for AFVS](https://github.com/LigandUniverse/AFVS/issues)
+- [GitHub Issue Tracker for AFLP](https://github.com/LigandUniverse/AFLP/issues)
 - In-code documentation of the source code files
 
 
@@ -52,14 +52,14 @@ The following gives an overview of the various resources related to AdaptiveFlow
 
 #### Features Requests
 
-New features can be requested [here](http://feedback.adaptiveflow.org/feature-requests), which is powered by Canny.
+New features can be requested [here](https://feedback.virtual-flow.org/feature-requests), which is powered by Canny.
 
 
 #### Bug Reports
 
 Bug reports can be done via our GitHub issue tracker:
-- [GitHub Issue Tracker for AFVS](https://github.com/AdaptiveFlow/AFVS/issues)
-- [GitHub Issue Tracker for AFLP](https://github.com/AdaptiveFlow/AFLP/issues)
+- [GitHub Issue Tracker for AFVS](https://github.com/LigandUniverse/AFVS/issues)
+- [GitHub Issue Tracker for AFLP](https://github.com/LigandUniverse/AFLP/issues)
 
 
 #### Improving/Extending the Documentation

@@ -10,7 +10,7 @@ fi
 
 # For CLI v1 use grep
 
-INSTANCE_ID=`aws cloudformation describe-stacks --stack-name vf-loginnode --query "Stacks[0].Outputs[].[OutputValue]" --region ${REGION} --output text | grep "^i-"`
+INSTANCE_ID=`aws cloudformation describe-stacks --stack-name af-loginnode --query "Stacks[0].Outputs[].[OutputValue]" --region ${REGION} --output text | grep "^i-"`
 
 STATUS=`aws ec2 describe-instances --region ${REGION} --instance-ids ${INSTANCE_ID} --query "Reservations[].Instances[].State.Name" --output text`
 

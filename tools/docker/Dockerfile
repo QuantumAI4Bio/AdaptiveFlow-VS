@@ -23,9 +23,9 @@ RUN yum update -y && yum -y install python3 wget gcc tar make gcc-c++ zlib-devel
 RUN yum install -y libicu libicu-devel
 RUN pip3 install boto3 pandas pyarrow
 
-ADD ./bin /opt/vf/tools/bin
-ADD ./templates/*.py /opt/vf/tools/templates/
-ADD ./templates/*.sh /opt/vf/tools/templates/
+ADD ./bin /opt/af/tools/bin
+ADD ./templates/*.py /opt/af/tools/templates/
+ADD ./templates/*.sh /opt/af/tools/templates/
 
 # Set library path
 ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
@@ -40,9 +40,9 @@ RUN wget -O boost_1_70_0.tar.gz https://boostorg.jfrog.io/artifactory/main/relea
     ldconfig
 
 # Add AdaptiveFlow tools and templates
-ADD ./bin /opt/vf/tools/bin
-ADD ./templates/*.py /opt/vf/tools/templates/
-ADD ./templates/*.sh /opt/vf/tools/templates/
+ADD ./bin /opt/af/tools/bin
+ADD ./templates/*.py /opt/af/tools/templates/
+ADD ./templates/*.sh /opt/af/tools/templates/
 
 # Download and install gwovina
 WORKDIR /tmp
@@ -50,16 +50,16 @@ RUN wget -q -O gwovina-1.0.tar.gz https://sourceforge.net/projects/gwovina/files
     tar -xzf gwovina-1.0.tar.gz && \
     cd gwovina-1.0/build/linux/release && \
     make && \
-    mv gwovina /opt/vf/tools/bin/gwovina
+    mv gwovina /opt/af/tools/bin/gwovina
 
 # Cleanup temporary files
 RUN rm -rf /tmp/gwovina-1.0* /tmp/gwovina-1.0.tar.gz
 
 # Ensure scripts in templates are executable
-RUN chmod +x -R /opt/vf/tools/templates/*.sh /opt/vf/tools/templates/*.py
+RUN chmod +x -R /opt/af/tools/templates/*.sh /opt/af/tools/templates/*.py
 
 WORKDIR /
 
 # Set the entrypoint for the container
-ENTRYPOINT ["/opt/vf/tools/templates/template1.awsbatch.sh"]
+ENTRYPOINT ["/opt/af/tools/templates/template1.awsbatch.sh"]
 

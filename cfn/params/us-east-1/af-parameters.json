@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ProjectName",
-    "ParameterValue": "AdaptiveFlow-us-west-2"
+    "ParameterValue": "AdaptiveFlow-us-east-1"
   },
   {
     "ParameterKey": "AllocationStrategy",
@@ -21,11 +21,11 @@
   },
   {
     "ParameterKey": "S3BucketName",
-    "ParameterValue": "YourS3BucketName"
+    "ParameterValue": "YourS3BucketNameHere"
   },
   {
     "ParameterKey": "VPCStackParameter",
-    "ParameterValue": "vf-vpc"
+    "ParameterValue": "af-vpc"
   },
   {
     "ParameterKey": "ContainerTimeout",

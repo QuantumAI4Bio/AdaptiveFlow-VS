@@ -437,7 +437,7 @@ def submit_ligand_for_docking(ctx, docking_queue, ligand_name, ligand_path, coll
                 'config_path': scenario['config'],
                 'program': scenario['program'],
                 'program_long': scenario['program_long'],
-                'input_files_dir':  os.path.join(ctx['temp_dir'], "vf_input", "input-files"),
+                'input_files_dir':  os.path.join(ctx['temp_dir'], "af_input", "input-files"),
                 'timeout': int(ctx['main_config']['program_timeout']),
                 'tools_path': ctx['tools_path'],
                 'threads_per_docking': int(ctx['main_config']['threads_per_docking']),
@@ -1044,7 +1044,7 @@ def process_config(ctx):
 
         ctx['main_config']['docking_scenarios'][scenario] = {
             'key': scenario,
-            'config': os.path.join(ctx['temp_dir'], "vf_input", "input-files",
+            'config': os.path.join(ctx['temp_dir'], "af_input", "input-files",
                                    ctx['main_config']['docking_scenario_names'][index],
                                    "config.txt"
                                    ),
@@ -1075,7 +1075,7 @@ def get_workunit_from_s3(ctx, workunit_id, subjob_id, job_bucket, job_object, do
     try:
         tar = tarfile.open(download_to_workunit_file)
         tar.extractall()
-        file = tar.extractfile(f"vf_input/config.json")
+        file = tar.extractfile(f"af_input/config.json")
 
         all_config = json.load(file)
         if(subjob_id in all_config['subjobs']):
@@ -1115,7 +1115,7 @@ def get_workunit_from_sharedfs(ctx, workunit_id, subjob_id, job_tar, download_di
     try:
         tar = tarfile.open(download_to_workunit_file)
         tar.extractall()
-        file = tar.extractfile(f"vf_input/config.json")
+        file = tar.extractfile(f"af_input/config.json")
 
         all_config = json.load(file)
         if(subjob_id in all_config['subjobs']):
@@ -4249,7 +4249,7 @@ def main():
     log_level = os.environ.get('AFVS_LOGLEVEL', 'INFO').upper()
     logging.basicConfig(level=log_level)
 
-    ctx['tools_path'] = os.getenv('AFVS_TOOLS_PATH', "/opt/vf/tools/bin")
+    ctx['tools_path'] = os.getenv('AFVS_TOOLS_PATH', "/opt/af/tools/bin")
 
     # Temp directory information
     temp_path = os.getenv('AFVS_TMP_PATH', None)

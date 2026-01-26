@@ -8,4 +8,4 @@ then
     exit
 fi
 
-aws cloudformation --region ${REGION} describe-stacks --stack-name vf-vpc --query "Stacks[0].StackStatus" --output text
+aws cloudformation --region ${REGION} describe-stacks --stack-name af-vpc --query "Stacks[0].StackStatus" --output text

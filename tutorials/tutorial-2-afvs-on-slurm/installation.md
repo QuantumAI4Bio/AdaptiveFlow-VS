@@ -12,7 +12,7 @@ pwd
 
 This shows the current folder, also known as the directory, where you are located. The first step is to navigate to the appropriate directory in the supercomputing cluster workspace where AdaptiveFlow will be installed.
 
-AdaptiveFlow should be installed on **a fast shared scratch file system** rather than the home directory. The reasoning behind this and further information regarding the installation of AdaptiveFlow can be found within the "AdaptiveFlow" subsection located in the "[Installation](installation.md)" section of the [documentation](https://app.gitbook.com/o/-LNuBCz49KX3ym-BKSfI/s/-LNuBCz54OweSMdPmK2T/).
+AdaptiveFlow should be installed on **a fast shared scratch file system** rather than the home directory. The reasoning behind this and further information regarding the installation of AdaptiveFlow can be found within the "AdaptiveFlow" subsection located in the "[Installation](https://docs.adaptive-flow.ai/documentation/-LdE8RH9UN4HKpckqkX3/installation/aflp#installation-location)" section of the [documentation](https://app.gitbook.com/o/-LNuBCz49KX3ym-BKSfI/s/-LNuBCz54OweSMdPmK2T/).
 
 After choosing the directory where you want AFVS and the workflow to be located, go to this directory. This can be done by entering the following command:
 

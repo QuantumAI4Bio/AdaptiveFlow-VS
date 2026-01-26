@@ -8,9 +8,9 @@ then
     exit
 fi
 
-aws ecr delete-repository --repository-name vf-aflp-ecr --force --region ${REGION}
-aws ecr delete-repository --repository-name vf-afvs-ecr --force --region ${REGION}
+aws ecr delete-repository --repository-name af-aflp-ecr --force --region ${REGION}
+aws ecr delete-repository --repository-name af-afvs-ecr --force --region ${REGION}
 
-aws cloudformation delete-stack --stack-name vf \
+aws cloudformation delete-stack --stack-name af \
 --region ${REGION}
 

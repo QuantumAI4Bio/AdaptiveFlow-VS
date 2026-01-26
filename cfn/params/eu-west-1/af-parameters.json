@@ -25,7 +25,7 @@
   },
   {
     "ParameterKey": "VPCStackParameter",
-    "ParameterValue": "vf-vpc"
+    "ParameterValue": "af-vpc"
   },
   {
     "ParameterKey": "ContainerTimeout",

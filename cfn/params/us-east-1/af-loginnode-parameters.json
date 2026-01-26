@@ -1,7 +1,7 @@
 [
   {
     "ParameterKey": "ProjectName",
-    "ParameterValue": "AdaptiveFlow-eu-west-1"
+    "ParameterValue": "AdaptiveFlow"
   },
   {
     "ParameterKey": "MainNodeInstance",
@@ -17,6 +17,6 @@
   },
   {
     "ParameterKey": "VPCStackParameter",
-    "ParameterValue": "vf-vpc"
+    "ParameterValue": "af-vpc"
   }
 ]

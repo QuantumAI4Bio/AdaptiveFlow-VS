@@ -9,22 +9,22 @@ then
 fi
 
 
-if [[ ! -e yaml/vf.yaml ]];
+if [[ ! -e yaml/af.yaml ]];
 then
-	echo "ERROR: yaml/vf.yaml is not setup yet"
+	echo "ERROR: yaml/af.yaml is not setup yet"
 	exit;
 fi
 
-if [[ ! -e params/${REGION}/vf-parameters.json ]];
+if [[ ! -e params/${REGION}/af-parameters.json ]];
 then
-	echo "ERROR: params/${REGION}/vf-parameters.json is not setup yet"
+	echo "ERROR: params/${REGION}/af-parameters.json is not setup yet"
 	exit;
 fi
 
 
-aws cloudformation create-stack --stack-name vf \
---template-body file://yaml/vf.yaml \
+aws cloudformation create-stack --stack-name af \
+--template-body file://yaml/af.yaml \
 --capabilities CAPABILITY_NAMED_IAM \
---parameters file://params/${REGION}/vf-parameters.json \
+--parameters file://params/${REGION}/af-parameters.json \
 --region ${REGION}
 

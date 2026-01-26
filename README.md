@@ -16,8 +16,8 @@ Currently, there exist two versions of AdaptiveFlow, which are tailored to diffe
 
 The following gives an overview of the various resources related to AdaptiveFlow:
 
-- [Homepage of AdaptiveFlow](https://adaptive-flow.org/)
-- [Tutorials for AdaptiveFlow](https://adaptive-flow.org/tutorials)
+- [Homepage of AdaptiveFlow](https://adaptive-flow.ai/)
+- [Tutorials for AdaptiveFlow](https://adaptive-flow.ai/tutorials)
 - [GitHub Issue Tracker for AFVS](https://github.com/LigandUniverse/AFVS/issues)
 - [GitHub Issue Tracker for AFLP](https://github.com/LigandUniverse/AFLP/issues)
 - In-code documentation of the source code files
@@ -38,4 +38,4 @@ The project is distributed under the GNU GPL v2.0. Please see the file [LICENSE]
 
 If you need help or have any questions related to AdaptiveFlow, please use our forum: 
 
-* https://community.adaptiveflow.org/
+* https://community.adaptive-flow.ai/

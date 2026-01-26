@@ -8,6 +8,6 @@ then
     exit
 fi
 
-aws cloudformation delete-stack --stack-name vf-vpc \
+aws cloudformation delete-stack --stack-name af-vpc \
 --region ${REGION}
 

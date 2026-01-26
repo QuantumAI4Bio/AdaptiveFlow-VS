@@ -41,7 +41,7 @@ Resources:
   S3Policy:
     Type: AWS::IAM::Policy
     Properties: 
-      PolicyName: !Sub ${AWS::StackName}-${AWS::Region}-VFS3Access
+      PolicyName: !Sub ${AWS::StackName}-${AWS::Region}-AFS3Access
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -242,7 +242,7 @@ Resources:
      
   ## Create a job definition
 
-  VFJobDefinition8aflp:
+  AFJobDefinition8aflp:
     Type: AWS::Batch::JobDefinition
     Properties:
       Tags: { "Project": !Ref ProjectName }
@@ -268,7 +268,7 @@ Resources:
                       - OnReason: "*"
                         Action: EXIT
 
-  VFJobDefinition8afvs:
+  AFJobDefinition8afvs:
     Type: AWS::Batch::JobDefinition
     Properties:
       Tags: { "Project": !Ref ProjectName }
@@ -320,7 +320,7 @@ Resources:
       Tags:
         - Key: Project
           Value: !Ref ProjectName
-      GroupDescription: "VF Batch"
+      GroupDescription: "AF Batch"
       VpcId:  
         Fn::ImportValue: 
           !Sub ${VPCStackParameter}-VPC

@@ -35,6 +35,6 @@ df -h
 
 export AFVS_WORKUNIT_SUBJOB=${AWS_BATCH_JOB_ARRAY_INDEX}
 
-cd /opt/vf/tools/templates/
+cd /opt/af/tools/templates/
 ./afvs_run.py
 
