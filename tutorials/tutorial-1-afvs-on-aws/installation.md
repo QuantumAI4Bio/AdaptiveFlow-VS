@@ -2,15 +2,15 @@
 
 ## Setting up AWS Batch
 
-AFVS on AWS uses an AWS Batch cluster and workload manager. Instructions on how to create the AWS Batch cluster, and how to access the AWS Batch login node can be found [here](https://github.com/AdaptiveFlow/AFVS/blob/afvs-2/README-AWS.md#getting-started-with-adaptiveflow) on the AFVS GitHub page.
+AFVS on AWS uses an AWS Batch cluster and workload manager. Instructions on how to create the AWS Batch cluster, and how to access the AWS Batch login node can be found [here](../../README-AWS.md) on the AFVS GitHub page.
 
 {% hint style="info" %}
-You will need to have an AWS Account. If you don't have one yet, you can create a free one here: [https://aws.amazon.com/](https://aws.amazon.com/)&#x20;
+You will need to have an AWS Account. If you don't have one yet, you can create a free one here: [https://aws.amazon.com/](https://aws.amazon.com/)
 {% endhint %}
 
 ## Setting up SSH
 
-To log in to the AWS Batch login node via ssh, follow the instructions [here](https://github.com/AdaptiveFlow/AFVS/blob/afvs-2/README-AWS.md#login-to-the-main-instance). You will land in the home directory of the AWS Batch login node.&#x20;
+To log in to the AWS Batch login node via ssh, follow the instructions [here](../../README-AWS.md). You will land in the home directory of the AWS Batch login node.
 
 ## Setting up Python
 
@@ -58,17 +58,16 @@ For the remainder of the tutorial and for future use of AFVS, **please ensure th
 After Python is set up, we can install AFVS. Normally this is done by cloning the GitHub repo, but for this tutorial, we provide a pre-configured folder for download. On the AWS Batch login node, you can download it by running the following command:
 
 ```
-wget https://adaptiveflow.org/sites/adaptiveflow.org/files/tutorials/AFVS2_Tutorial1_Preconfigured_AWS_20240421.tar.gz
+wget https://adaptive-flow.ai/sites/adaptive-flow.ai/files/tutorials/AFVS2_Tutorial1_Preconfigured_AWS_20240421.tar.gz
 ```
 
 This preconfigured folder was prepared by:
 
-* Cloning the GitHub repo (branch afvs-2)
+* Cloning the [GitHub repo](https://github.com/LigandUniverse/AFVS/tree/develop)
 * Adding the docking input files to the `input-files` folder
 * Configuring the `all.ctrl` file. The following parameters are changed compared to the template file in the AFVS GitHub repo:
   * `job_name`
-  * `docking_scenario_names`&#x20;
+  * `docking_scenario_names`
   * `docking_scenario_programs`
   * `docking_scenario_replicas`
   * `docking_scenario_batchsizes`
-

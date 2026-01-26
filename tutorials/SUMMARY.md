@@ -6,7 +6,7 @@
 
 * [Introduction](tutorial-1-afvs-on-aws/introduction.md)
 * [Installation of AFVS](tutorial-1-afvs-on-aws/installation.md)
-* [Setting up the ATG Prescreen ](tutorial-1-afvs-on-aws/setting-up-the-atg-prescreen.md)
+* [Setting up the ATG Prescreen](tutorial-1-afvs-on-aws/setting-up-the-atg-prescreen.md)
 * [Starting the ATG Prescreen](tutorial-1-afvs-on-aws/starting-the-atg-prescreen.md)
 * [Monitoring the ATG Prescreen](tutorial-1-afvs-on-aws/monitoring-the-atg-prescreen.md)
 * [Postprocessing the ATG Prescreen](tutorial-1-afvs-on-aws/postprocessing-the-atg-prescreen.md)
@@ -27,6 +27,6 @@
 * [\* Postprocessing the ATG Primary Screen](tutorial-2-afvs-on-slurm/postprocessing-the-output-data.md)
 * [The Completed Workflow (Update in Progress for the Python version)](tutorial-2-afvs-on-slurm/the-completed-workflow/README.md)
   * [Local installation and deployment of HPC-toolkit](tutorial-2-afvs-on-slurm/the-completed-workflow/local-installation-and-deployment-of-hpc-toolkit.md)
-  * [Installing AdaptiveFlow2.0](tutorial-2-afvs-on-slurm/the-completed-workflow/installing-adaptiveflow2.0.md)
+  * [Installing AdaptiveFlow](tutorial-2-afvs-on-slurm/the-completed-workflow/installing-adaptiveflow2.0.md)
   * [Screening the sparse library with AdaptiveFlow](tutorial-2-afvs-on-slurm/the-completed-workflow/screening-the-sparse-library-with-adaptiveflow.md)
   * [Extracting and viewing the results](tutorial-2-afvs-on-slurm/the-completed-workflow/extracting-and-viewing-the-results.md)

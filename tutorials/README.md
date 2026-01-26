@@ -1,10 +1,10 @@
 # Tutorial Overview
 
-The tutorials here are for AFVS (part of AdaptiveFlow). \
+The tutorials here are for AFVS (part of AdaptiveFlow).\
 \
 The following hands-on tutorials are available:
 
-* [Tutorial 1: AFVS - Preconfigured Example for AWS](broken-reference)
+* [Tutorial 1: AFVS - Preconfigured Example for AWS](./)
 
 More tutorials are planned for the future.
 

@@ -2,7 +2,7 @@
 
 ## Choosing the Installation Location
 
-After setting up access to the supercomputing cluster, open up the command line interface (terminal in Linux or macOS, Command Prompt in Windows). At the command line, follow the instructions of the specific supercomputing cluster being used to log in to connect to the supercomputing cluster. Typically `ssh` is used to connect to the login node of the Slurm cluster.&#x20;
+After setting up access to the supercomputing cluster, open up the command line interface (terminal in Linux or macOS, Command Prompt in Windows). At the command line, follow the instructions of the specific supercomputing cluster being used to log in to connect to the supercomputing cluster. Typically `ssh` is used to connect to the login node of the Slurm cluster.
 
 Once logged into and interfacing with the supercomputing cluster, enter the following command:
 
@@ -75,27 +75,25 @@ wget https://adaptive-flow.ai/sites/adaptive-flow.ai/files/tutorials/AFVS%202%20
 
 This preconfigured folder was prepared by:
 
-* Cloning the GitHub repo (branch afvs-2)
+* Cloning the [GitHub repo](https://github.com/LigandUniverse/AFVS/tree/develop)
 * Adding the docking input files to the `input-files` folder
 * Configuring the `all.ctrl` file. The following parameters are changed compared to the template file in the AFVS GitHub repo:
   * `job_name`
   * `batchsystem`
   * `job_storage_mode`
-  * `docking_scenario_names`&#x20;
+  * `docking_scenario_names`
   * `docking_scenario_programs`
   * `docking_scenario_replicas`
   * `docking_scenario_batchsizes`
 
-
-
 ## Installation of the AWS CLI
 
-For AFVS to be able to access the ligand libraries stored in AWS Open Data, we need to install the AWS-CLI.&#x20;
+For AFVS to be able to access the ligand libraries stored in AWS Open Data, we need to install the AWS-CLI.
 
 {% hint style="info" %}
-You will need to have an AWS Account. If you don't have one yet, you can create a free one here: [https://aws.amazon.com/](https://aws.amazon.com/)&#x20;
+You will need to have an AWS Account. If you don't have one yet, you can create a free one here: [https://aws.amazon.com/](https://aws.amazon.com/)
 
-You will also need to create access keys for your username, e.g. the root user: [https://docs.aws.amazon.com/IAM/latest/UserGuide/id\_root-user\_manage\_add-key.html](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user_manage_add-key.html)&#x20;
+You will also need to create access keys for your username, e.g. the root user: [https://docs.aws.amazon.com/IAM/latest/UserGuide/id\_root-user\_manage\_add-key.html](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user_manage_add-key.html)
 {% endhint %}
 
 First, let's make sure that no prior version of AWS-CLI is installed:
@@ -110,27 +108,27 @@ Next, download the archive:
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 ```
 
-When finished, simply unzip the archive:&#x20;
+When finished, simply unzip the archive:
 
 ```
 unzip awscliv2.zip
 ```
 
-and install:&#x20;
+and install:
 
 ```
 sudo ./aws/install
 ```
 
-If you don't have sudo rights, you will need to ask the cluster admins to install it for you.&#x20;
+If you don't have sudo rights, you will need to ask the cluster admins to install it for you.
 
-To check that your installation is successful, you can run:&#x20;
+To check that your installation is successful, you can run:
 
 ```
 aws --version
 ```
 
-The above command should generate an output similar to:&#x20;
+The above command should generate an output similar to:
 
 ```
 aws-cli/2.15.1 Python/3.11.6 Linux/5.15.0-1031-gcp exe/x86_64.ubuntu.22 prompt/off
@@ -142,7 +140,7 @@ Next, you must configure AWS-CLI:
 aws configure
 ```
 
-You have to define the following (the keys should match the ones you use in your local version of aws-cli):&#x20;
+You have to define the following (the keys should match the ones you use in your local version of aws-cli):
 
 ```
 AWS Access Key ID [None]:
