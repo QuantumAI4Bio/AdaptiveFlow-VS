@@ -22,7 +22,7 @@ program_timeout=90
 ************************************************
 
 batchsystem=awsbatch
-# Possible values: awsbatch, slurm
+# Possible values: awsbatch, slurm, lsf
 
 ****** AWS Batch Options (if batchsystem=awsbatch)
 
@@ -91,6 +91,26 @@ slurm_array_job_size=100
 
 slurm_job_submission_timeout=10
 # Timeout for submission of slurm jobs
+
+****** LSF Options (if batchsystem=lsf)
+
+lsf_template=./templates/template1.lsf.sh
+# Template for the LSF job
+
+lsf_account=
+# LSF project/account to use (-P). If not set, default is used
+
+lsf_queue=normal
+# Queue to submit the job (-q)
+
+lsf_cpus=18
+# Number of CPUs per job (-n)
+
+lsf_job_submission_timeout=10
+# Timeout in seconds for each individual bsub call
+
+lsf_array_job_size=100
+# Maximum number of subjobs to group under a single workunit
 
 ****** Bash Options (if batchsystem=bash)
 
