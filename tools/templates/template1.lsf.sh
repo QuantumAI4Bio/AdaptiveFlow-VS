@@ -42,7 +42,8 @@
 # If you are using a virtualenv, make sure the correct one
 # is being activated
 
-source $HOME/afvs_env/bin/activate
+source $(conda info --base)/etc/profile.d/conda.sh
+conda activate afvs_env
 
 # Ensure we run from the AFVS tools directory regardless of LSF working dir default
 cd "{{batch_workunit_base}}/../../../tools"
