@@ -1,6 +1,6 @@
 ****** Job Resource Configuration 
 
-job_name=test
+job_name=tyk2_lsf_test
 # alphabetic characters (i.e. letters from a-z or A-Z)
 # Used to describe distinct runs (using the same name will
 # overwrite data if using S3!)
@@ -8,7 +8,7 @@ job_name=test
 threads_per_docking=1
 # How many threads should be used for each docking program. 
 
-threads_to_use=16
+threads_to_use=8
 # This sets how many processes the main execution loop should be using
 # to process. This is generally 2x the number of vCPUs or hyperthreads
 # available on the system it is being run on
@@ -21,8 +21,8 @@ program_timeout=90
 ** Batch system configuration
 ************************************************
 
-batchsystem=awsbatch
-# Possible values: awsbatch, slurm
+batchsystem=lsf
+# Possible values: awsbatch, slurm, lsf
 
 ****** AWS Batch Options (if batchsystem=awsbatch)
 
@@ -92,6 +92,26 @@ slurm_array_job_size=100
 slurm_job_submission_timeout=10
 # Timeout for submission of slurm jobs
 
+****** LSF Options (if batchsystem=lsf)
+
+lsf_template=./templates/template1.lsf.sh
+# Template for the LSF job
+
+lsf_account=
+# LSF project/account to use (-P). If not set, default is used
+
+lsf_queue=standard
+# Queue to submit the job (-q)
+
+lsf_cpus=8
+# Number of CPUs per job (-n)
+
+lsf_job_submission_timeout=10
+# Timeout in seconds for each individual bsub call
+
+lsf_array_job_size=100
+# Maximum number of subjobs to group under a single workunit
+
 ****** Bash Options (if batchsystem=bash)
 
 bash_template=./templates/template1.bash
@@ -105,7 +125,7 @@ bash_array_job_size=100
 ** Storage configuration
 ************************************************
 
-data_storage_mode=s3
+data_storage_mode=sharedfs
 # This mode determines where data is retrieved as part of AFVS
 #   * s3: Job data is stored on S3 object store, which is the required
 #         mode if using AWS Batch. Items under the "S3 Object Store"
@@ -115,7 +135,7 @@ data_storage_mode=s3
 #         same shared filesystem that will allow for both input and output
 #         of data. This only allowed if Slurm is set at the scheduler
 
-job_storage_mode=s3
+job_storage_mode=sharedfs
 # This mode determines where data is stored after a run
 #   * s3: Job data is stored on S3 object store, which is the required
 #         mode if using AWS Batch. Items under the "S3 Object Store" 
@@ -126,7 +146,7 @@ job_storage_mode=s3
 #         of data. This is required if using Slurm or bash
 
 
-data_collection_addressing_mode=hash
+data_collection_addressing_mode=metatranche
 # If input is placed with the hash addressing mode, then use 'hash'.
 # otherwise use "metatranche" for the classic addressing mode
 
@@ -167,7 +187,7 @@ object_store_data_collection_prefix=Enamine_REAL_Space_2022q12
 
 ****** Shared Filesystem Settings
 
-collection_folder=/home/ec2-user/collections
+collection_folder=/scratch_space/YOUR_CLUSTER_USERNAME/collections
 # Path to where the collection file (ready-to-dock ligands/docking requirement files) 
 # are stored
 #  * This is used when job_storage_mode=sharedfs or
@@ -184,7 +204,7 @@ collection_folder=/home/ec2-user/collections
 
 ****** Output information
 
-summary_formats=parquet,csv.gz
+summary_formats=csv.gz
 # Format for summary files that are generated with the score data.
 # Supported values:
 #  * csv.gz (comma delimited files)
@@ -230,7 +250,7 @@ collection_list_file=templates/todo.all
 # Path to the file that contains the collection data on what should be 
 # processed as part of the workflow
 
-dockings_per_subjob=1000
+dockings_per_subjob=100
 # Used as how many dockings should be processed per subjob. In general,
 # a subjob should take about 20 min to an hour for efficiency. 
 # A reasonable number for this is generally 1000. The length of time
@@ -245,7 +265,7 @@ ligand_library_format=pdbqt
 # For the selected docking program, the user is required to set
 #     this to a compatible value. Eg: for plants, set this to mol2
 
-dynamic_tranche_filtering=1
+dynamic_tranche_filtering=0
 # Supported values:
 # * 0: Disabled
 # * 1: Enabled
@@ -262,7 +282,7 @@ tempdir_default=/dev/shm
 
 ****** Virtual Screening Options
 
-docking_scenario_names=
+docking_scenario_names=tyk2_qvina
 # Names for the docking scenarios, separated by colons
 # Each docking scenario has one value. Multiple docking scenarios/names have
 #    to be separated by colons ":" and without spaces
@@ -273,7 +293,7 @@ docking_scenario_names=
 # In each of thes e folders must be the file config.txt which is used by the docking method to specify its options
 # If other input files are required by the docking type, usually specified in the config.txt file, they have to be in the same folder.
 
-docking_scenario_methods=
+docking_scenario_methods=qvina02
 # For each docking scenario name, a docking method has to be specified
 # Possible values: qvina02, qvina_w, vina, smina_rigid, smina_flexible, gwovina, adfr, AutodockVina_1.2, AutodockZN
 #                  gnina, rDock, M-Dock, MCDock, LigandFit, ledock, gold, iGemDock, idock, GalaxyDock3, autodock_gpu
@@ -286,7 +306,7 @@ docking_scenario_methods=
 # smina_rigid has to be used for rigid docking with smina, while smine_flexible for flexible receptor docking
 # scoring function can also be combined using the same strategy e.g. docking_scenario_methods=vina:nnscore2.0
 
-docking_scenario_replicas=
+docking_scenario_replicas=1
 # Series of integers separated by colons ":"
 # The number of values has to equal the number of docking methods
 #     specified in the variable "docking_scenario_methods"
@@ -296,7 +316,7 @@ docking_scenario_replicas=
 # possible range: 1-99999 per field/docking method
 # The docking scenario is comprised of all the docking types and their replicas
 
-docking_scenario_batchsizes=
+docking_scenario_batchsizes=1
 # Purpose: How many ligands should be processed in a single invocation
 #     of the docking method (most methods do not allow more than 1)
 # Series of integers separated by colons ":"
@@ -314,7 +334,7 @@ docking_scenario_basefolder=../input-files
 # Base directory for where the docking scenarios are held. Nothing other 
 # than the required files for the docking scenario should be placed here
 
-prescreen_mode=1
+prescreen_mode=0
 # Run a subset of the ligands included in the library. Only functional
 # if library supports the prescreen functionality with .listing
 # file inside the collection

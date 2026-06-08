@@ -1,0 +1,8 @@
+receptor=../input-files/tyk2_qvina/tyk2_protein_clean.pdbqt
+center_x=-4.0
+center_y=26.6
+center_z=-30.4
+size_x=22
+size_y=22
+size_z=22
+exhaustiveness=8
