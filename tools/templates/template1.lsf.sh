@@ -36,13 +36,16 @@
 #BSUB -o {{batch_workunit_base}}/{{subjob_id}}.out
 #BSUB -e {{batch_workunit_base}}/{{subjob_id}}.err
 #BSUB -q {{lsf_queue}}
-#BSUB -P {{lsf_account}}
+{% if lsf_account %}#BSUB -P {{lsf_account}}{% endif %}
 
 
 # If you are using a virtualenv, make sure the correct one
 # is being activated
 
 source $HOME/afvs_env/bin/activate
+
+# Ensure we run from the AFVS tools directory regardless of LSF working dir default
+cd "{{batch_workunit_base}}/../../../tools"
 
 
 # Job Information -- generally nothing in this
