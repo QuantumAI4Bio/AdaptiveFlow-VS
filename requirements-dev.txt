@@ -1,0 +1,6 @@
+# Lightweight workflow tests; no docking binaries, AWS credentials, or ML stack required.
+boto3==1.43.121
+Jinja2==3.1.6
+pandas==3.1.0
+pytest==9.2.0
+ruff==0.17.3

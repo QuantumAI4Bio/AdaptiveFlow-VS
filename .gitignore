@@ -3,3 +3,11 @@
 *.pyc
 .dropbox.attr
 *.attr
+
+# Local development environments and test output
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+test-results*.xml
