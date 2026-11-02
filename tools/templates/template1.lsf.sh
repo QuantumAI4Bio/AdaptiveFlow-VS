@@ -42,9 +42,10 @@
 
 conda activate afvs_env
 
-export AWS_PROFILE=qai4biolab
-export AWS_SHARED_CREDENTIALS_FILE=/home/jsetiadi/.aws/credentials
-export AWS_CONFIG_FILE=/home/jsetiadi/.aws/config
+# Configure your AWS-CLI settings
+export AWS_PROFILE=
+export AWS_SHARED_CREDENTIALS_FILE=
+export AWS_CONFIG_FILE=
 
 # LSF job array indices start at 1, but AFVS subjobs are numbered
 # starting at 0 -- shift down by one to match
