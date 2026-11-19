@@ -1,0 +1,7 @@
+pytest
+boto3
+pandas
+pyarrow
+jinja2
+google-cloud-batch
+google-cloud-storage
