@@ -22,7 +22,7 @@ program_timeout=90
 ************************************************
 
 batchsystem=slurm
-# Possible values: awsbatch, slurm, bash, lsf
+# Possible values: awsbatch, gcpbatch, slurm, bash, lsf
 
 ****** AWS Batch Options (if batchsystem=awsbatch)
 
@@ -64,6 +64,92 @@ aws_batch_subjob_memory=15000
 aws_batch_subjob_timeout=20800
 # Maximum amount of time (in seconds) that a single AWS Batch job should 
 # ever run before being terminated.
+
+****** Google Cloud Batch Options (if batchsystem=gcpbatch)
+
+### To use Google Cloud Batch you must first complete the steps outlined
+### in README-GCP.md. Live submission is disabled by default: see
+### gcp_batch_live_transport below.
+
+gcp_project=
+# Google Cloud project ID that owns the Batch jobs and the job bucket
+
+gcp_region=us-central1
+# Region in which Batch jobs run. Keep this in the same region as the
+# ligand library bucket to avoid cross-region read charges
+
+gcp_batch_job_prefix=afvs
+# Prefix for generated Batch job IDs. Job IDs are
+# <prefix>-<job_name>-<workunit>-<part> and must stay within the 63
+# character limit the Batch API imposes
+
+gcp_batch_array_job_size=200
+# Maximum number of tasks in a single Batch job. A workunit with more
+# subjobs than this is split across several Batch jobs, each covering a
+# consecutive window of subjobs
+
+gcp_batch_machine_type=c2d-standard-8
+# Machine type for the Batch instances
+
+gcp_batch_provisioning_model=STANDARD
+# STANDARD or SPOT. SPOT is cheaper but can be preempted, which shows up
+# as interrupted attempts and retries
+
+gcp_batch_worker_image=
+# Full image URI of the AdaptiveFlow worker container, for example
+# us-central1-docker.pkg.dev/<project>/<repo>/afvs-worker:<tag>
+# Pin an immutable tag or digest so a campaign cannot change engine
+# versions halfway through
+
+gcp_batch_service_account=
+# Email of the service account the tasks run as. It needs read access to
+# the ligand library bucket and write access to the job bucket
+
+gcp_batch_subjob_vcpus=8
+# vCPUs requested per subjob. Converted to cpuMilli (vCPUs * 1000).
+# 'threads_to_use' above should not exceed twice this value
+
+gcp_batch_subjob_memory=15000
+# Memory per subjob in MiB
+
+gcp_batch_subjob_timeout=20800
+# Maximum run duration of a single task in seconds
+
+gcp_batch_subjob_retry_count=1
+# Maximum automatic retries per task
+
+gcp_batch_parallelism=0
+# How many tasks of one Batch job may run at once.
+# 0 means "as many as there are tasks"
+
+gcp_batch_boot_disk_mib=0
+# Boot disk size per instance in MiB. 0 leaves the Batch default
+
+gcp_batch_network=
+gcp_batch_subnetwork=
+# Optional VPC network and subnetwork for the instances
+
+gcp_batch_no_external_ip=1
+# If a network is configured, run instances without an external IP.
+# Requires Private Google Access or Cloud NAT for storage access
+
+gcp_batch_task_scratch_path=/tmp
+# Directory inside the Batch task used for scratch: the workunit archive,
+# the unpacked collections and the poses before they are uploaded. It must
+# be an absolute, disk-backed path with at least 1 GiB free, because the
+# worker refuses to start otherwise. It deliberately does not follow
+# 'tempdir_default' (/dev/shm): a container provides only 64 MiB there.
+# Size 'gcp_batch_boot_disk_mib' to hold one subjob's collections and
+# output.
+
+gcp_batch_live_transport=0
+# Supported values:
+#   0 : Live submission is disabled. The scheduler integration, job
+#       rendering and storage layout are fully exercised, but no Google
+#       Cloud API call is made. './afvs_submit_jobs.py 1 1 --preview'
+#       prints exactly the job that would be submitted
+#   1 : Live submission is enabled. Submitted jobs consume Batch, Compute
+#       Engine and Cloud Storage resources and are billed to gcp_project
 
 ****** Slurm Options (if batchsystem=slurm)
 
@@ -148,6 +234,11 @@ data_storage_mode=s3
 #         mode if using AWS Batch. Items under the "S3 Object Store"
 #         heading (object_store_data_bucket, object_store_data_collection_prefix)
 #         are needed if this is the mode used.
+#   * gcs: Ligand collections are read from Google Cloud Storage, using the
+#         same two items (object_store_data_bucket holds the GCS bucket
+#         name). This is the matching mode for batchsystem=gcpbatch.
+#         Reading an S3 library from Google Cloud Batch is supported but is
+#         a cross-provider read: it incurs AWS egress and is slower.
 #   * sharedfs: This mode requires that all running jobs have access to the
 #         same shared filesystem that will allow for both input and output
 #         of data. This only allowed if Slurm is set at the scheduler
@@ -155,9 +246,14 @@ data_storage_mode=s3
 job_storage_mode=sharedfs
 # This mode determines where data is stored after a run
 #   * s3: Job data is stored on S3 object store, which is the required
-#         mode if using AWS Batch. Items under the "S3 Object Store" 
+#         mode if using AWS Batch. Items under the "S3 Object Store"
 #         of 'object_store_job_bucket' and 'object_store_job_prefix'
 #         are required.
+#   * gcs: Job data is stored in Google Cloud Storage, which is the
+#         required mode if using Google Cloud Batch. The same two items
+#         'object_store_job_bucket' and 'object_store_job_prefix' are
+#         required. Job storage is configured independently of ligand
+#         library storage.
 #   * sharedfs: This mode requires that all running jobs have access to the
 #         same shared filesystem that will allow for both input and output
 #         of data. This is required if using Slurm or bash

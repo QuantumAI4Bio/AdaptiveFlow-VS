@@ -39,6 +39,8 @@ import shutil
 import jinja2
 import subprocess
 
+import afvs_gcpbatch
+
 
 def parse_config(filename):
     with open(filename, "r") as read_file:
@@ -350,16 +352,88 @@ def submit_aws_batch(config, client, current_workunit, jobline):
     # Slow ourselves down a bit
     time.sleep(0.1)
 
-def process(config, start, stop):
+def submit_gcp_batch(config, transport, current_workunit, jobline, status_path):
+    """Submits one AFVS workunit to Google Cloud Batch.
 
-    aws_config = Config(
-        region_name=config['aws_region']
-    )
-    client = boto3.client('batch', config=aws_config)
+    A workunit becomes one Batch job per array part. Submission intent for
+    every part is written to the status file before the provider is called,
+    so an interrupted submission can be reconciled against the provider
+    instead of being repeated.
+    """
+    jobline_str = str(jobline)
+    subjob_ids = sorted(current_workunit['subjobs'].keys(), key=lambda value: int(value))
 
-    status = {}
+    recorded_parts = {}
+    for record in current_workunit.get('gcp_batch_parts', []):
+        recorded_parts[record['part_index']] = record
+
+    def persist_intent(record):
+        recorded_parts[record['part_index']] = record
+        current_workunit['gcp_batch_parts'] = [
+            recorded_parts[key] for key in sorted(recorded_parts)]
+        current_workunit['status'] = "SUBMISSION_INTENT"
+        _write_status_file(status_path)
+
+    records = afvs_gcpbatch.submit_workunit(
+        config, transport, jobline_str, subjob_ids,
+        persist_intent=persist_intent,
+        recorded_parts=recorded_parts)
+
+    current_workunit['gcp_batch_parts'] = records
+    current_workunit['status'] = "SUBMITTED"
+    current_workunit['job_id'] = records[0]['job_id'] if records else None
+    current_workunit['provider_job_names'] = [
+        record.get('provider_job_name') for record in records]
+
+    for subjob_id, subjob in current_workunit['subjobs'].items():
+        subjob['status'] = "SUBMITTED"
+
+    # Slow ourselves down a bit
+    time.sleep(0.1)
+
+
+#: Set by process() so that persist_intent can flush the status file before
+#: each provider call without threading the whole status structure through.
+_STATUS_STATE = {}
+
+
+def _write_status_file(status_path):
+    status = _STATUS_STATE.get('status')
+    if status is None:
+        return
+    temp_path = f"{status_path}.tmp"
+    with open(temp_path, "w") as json_out:
+        json.dump(status, json_out, indent=4)
+    Path(temp_path).replace(status_path)
+
+
+def process(config, start, stop, preview=False, status_path="../workflow/status.json"):
 
     submit_type=config['batchsystem']
+
+    if preview and submit_type != afvs_gcpbatch.BATCH_SYSTEM:
+        # Refused before anything is opened for writing. A preview must not
+        # touch the workflow directory at all, not even to re-initialize
+        # the bash run script.
+        raise SystemExit(
+            f"--preview is only available for batchsystem={afvs_gcpbatch.BATCH_SYSTEM}")
+
+    client = None
+    transport = None
+
+    if submit_type == "awsbatch":
+        aws_config = Config(
+            region_name=config['aws_region']
+        )
+        client = boto3.client('batch', config=aws_config)
+    elif submit_type == afvs_gcpbatch.BATCH_SYSTEM:
+        config = afvs_gcpbatch.config_defaults_applied(config)
+        for warning in afvs_gcpbatch.cross_provider_warnings(config):
+            print(f"WARNING: {warning}")
+        if not preview:
+            transport = afvs_gcpbatch.transport_from_config(config)
+
+    status = {}
 
 
     # If this is batch, let's init a file
@@ -368,49 +442,74 @@ def process(config, start, stop):
             bash_out.write("#!/usr/bin/env bash\n")
 
     # load the status file that is keeping track of the data
-    with open("../workflow/status.json", "r") as read_file:
+    with open(status_path, "r") as read_file:
         status = json.load(read_file)
         workunits = status['workunits']
+
+    _STATUS_STATE['status'] = status
 
     for jobline in range(start, stop + 1):
 
         jobline_str = str(jobline)
         if jobline_str not in workunits:
             print(f"Jobline {jobline_str} was not found")
+            continue
+
+        current_workunit = workunits[jobline_str]
+
+        if preview:
+            subjob_ids = sorted(current_workunit['subjobs'].keys(),
+                                key=lambda value: int(value))
+            print(json.dumps(
+                afvs_gcpbatch.preview_workunit(config, jobline_str, subjob_ids), indent=2))
+            continue
+
+        print(f"Submitting jobline {jobline_str}... ")
+
+        # Now see if any of them have been submitted before
+        if 'status' in current_workunit and current_workunit['status'] != "SUBMISSION_INTENT":
+            print("jobs were already submitted for this....")
         else:
-            current_workunit = workunits[jobline_str]
+            if current_workunit.get('status') == "SUBMISSION_INTENT":
+                # A previous run recorded intent but did not finish. The
+                # recorded job IDs are deterministic, so resubmission
+                # adopts whatever the provider already created rather than
+                # launching the same work twice.
+                print("resuming an interrupted submission for this workunit")
 
-            print(f"Submitting jobline {jobline_str}... ")
-
-            # Now see if any of them have been submitted before
-            if 'status' in current_workunit:
-                print("jobs were already submitted for this....")
+            if(submit_type == "awsbatch"):
+                submit_aws_batch(config, client, current_workunit, jobline)
+            elif(submit_type == afvs_gcpbatch.BATCH_SYSTEM):
+                submit_gcp_batch(config, transport, current_workunit, jobline, status_path)
+            elif(submit_type == "slurm"):
+                submit_slurm(config, client, current_workunit, jobline)
+            elif(submit_type == "bash"):
+                run_bash(config, current_workunit, jobline)
+            elif(submit_type == "lsf"):
+                submit_lsf(config, client, current_workunit, jobline)
             else:
-                if(submit_type == "awsbatch"):
-                    submit_aws_batch(config, client, current_workunit, jobline)
-                elif(submit_type == "slurm"):
-                    submit_slurm(config, client, current_workunit, jobline)
-                elif(submit_type == "bash"):
-                    run_bash(config, current_workunit, jobline)
-                elif(submit_type == "lsf"):
-                    submit_lsf(config, client, current_workunit, jobline)
-                else:
-                    print(f"Unknown submit type {submit_type}")
+                print(f"Unknown submit type {submit_type}")
 
 
 
+
+    if preview:
+        # A preview never changes recorded state.
+        return
 
     # Output all of the information about the workunits into JSON so we can easily grab this data in the future
-    
+
     print("Writing the json status file out")
 
-    with open("../workflow/status.json.tmp", "w") as json_out:
+    with open(f"{status_path}.tmp", "w") as json_out:
         json.dump(status, json_out, indent=4)
 
-    Path("../workflow/status.json.tmp").rename("../workflow/status.json")
+    Path(f"{status_path}.tmp").replace(status_path)
 
     print("Making copy for status.submission as backup")
-    shutil.copyfile("../workflow/status.json", "../workflow/status.submission.json")
+    # The backup lives beside the status file it is a backup of, so that
+    # --status points both of them at the same workflow directory.
+    shutil.copyfile(status_path, Path(status_path).parent / "status.submission.json")
 
     print("Done")
 
@@ -419,15 +518,26 @@ def process(config, start, stop):
         print("Run ../workflow/run.bash to run these job steps")
 
 
-def main():
+def main(argv=None):
 
-    if len(sys.argv) != 3:
-        print('You must supply exactly two arguments -- the start jobline and the end jobline.')
-        print('Joblines start from 1')
-        sys.exit()
+    parser = argparse.ArgumentParser(
+        description="Submit a range of AdaptiveFlow workunits to the configured batch system",
+        epilog="Joblines start from 1")
+    parser.add_argument('start_jobline', type=int, help="First jobline to submit")
+    parser.add_argument('stop_jobline', type=int, help="Last jobline to submit")
+    parser.add_argument('--preview', action='store_true',
+                        help="Print the rendered Google Cloud Batch job JSON for each jobline "
+                             "and exit without submitting or recording anything")
+    parser.add_argument('--config', default="../workflow/config.json",
+                        help="Path to the workflow config.json")
+    parser.add_argument('--status', default="../workflow/status.json",
+                        help="Path to the workflow status.json")
 
-    config = parse_config("../workflow/config.json")
-    process(config, int(sys.argv[1]), int(sys.argv[2]))
+    args = parser.parse_args(argv)
+
+    config = parse_config(args.config)
+    process(config, args.start_jobline, args.stop_jobline,
+            preview=args.preview, status_path=args.status)
 
 
 if __name__ == '__main__':

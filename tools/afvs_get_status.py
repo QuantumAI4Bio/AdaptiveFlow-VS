@@ -30,6 +30,7 @@
 
 
 import os
+import sys
 import json
 import boto3
 import botocore
@@ -49,6 +50,10 @@ from multiprocessing import Queue
 from queue import Empty
 import logging
 import shutil
+
+import afvs_gcpbatch
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
+import afvs_gcs
 
 
 
@@ -466,6 +471,86 @@ def process(config):
 
 
 
+def process_gcpbatch(config, local_object_store=None):
+    """Reports status for a native Google Cloud Batch workflow.
+
+    Two independent sources are combined, because neither alone is
+    sufficient: the scheduler knows whether tasks ran, and the output
+    manifests know whether the science they were supposed to produce
+    actually landed in storage.
+    """
+    config = afvs_gcpbatch.config_defaults_applied(config)
+
+    with open("../workflow/status.json", "r") as read_file:
+        complete = json.load(read_file)
+
+    workunits = complete['workunits']
+    transport = afvs_gcpbatch.transport_from_config(config)
+    object_store = afvs_gcs.object_store_from_env(
+        project=config.get('gcp_project'), local_root=local_object_store)
+
+    task_states = {}
+    manifest_states = {'empty': 0, 'partial': 0, 'complete': 0}
+    dockings = {'total': 0, 'succeeded': 0, 'failed': 0, 'skipped': 0}
+    unreachable = []
+
+    for workunit_id, workunit in sorted(workunits.items(), key=lambda item: int(item[0])):
+        records = workunit.get('gcp_batch_parts')
+        if not records:
+            # Not submitted yet.
+            continue
+
+        try:
+            reconciliation = afvs_gcpbatch.reconcile_workunit(config, transport, records)
+            workunit['gcp_batch_reconciliation'] = reconciliation
+            for state, count in reconciliation['task_state_summary'].items():
+                task_states[state] = task_states.get(state, 0) + count
+        except afvs_gcpbatch.LiveTransportDisabled as error:
+            unreachable.append(str(error))
+
+        expected_subjobs = sorted(workunit.get('subjobs', {}).keys(),
+                                  key=lambda value: int(value))
+        manifest_report = afvs_gcpbatch.reconcile_manifests(
+            config, object_store, workunit_id, expected_subjobs)
+        workunit['gcp_batch_output_manifest'] = manifest_report
+
+        manifest_states[manifest_report['state']] += 1
+        for key in dockings:
+            dockings[key] += int(manifest_report['dockings'].get(key, 0) or 0)
+
+    print("-----------------------------------------------------------------")
+    print("Google Cloud Batch Progress")
+    print("-----------------------------------------------------------------")
+    print("")
+
+    if unreachable:
+        print("Scheduler state was not read: the live Google Cloud Batch transport is disabled.")
+        print(f"  {unreachable[0]}")
+        print("")
+
+    if task_states:
+        print(f"{'Task state':>24}   {'Tasks':^10}")
+        for state, count in sorted(task_states.items()):
+            print(f"{state:>24}   {count:^10}")
+        print("")
+
+    print("Output manifests (scientific completion, independent of scheduler state)")
+    for state in ("complete", "partial", "empty"):
+        print(f"{state:>24}   {manifest_states[state]:^10} workunits")
+    print("")
+
+    print(f"* Total dockings  : {dockings['total']}")
+    print(f"  - Succeeded     : {dockings['succeeded']}")
+    print(f"  - Failed        : {dockings['failed']}")
+    print(f"* Skipped ligands : {dockings['skipped']}")
+    print("")
+
+    with open("../workflow/status.tmp.json", "w") as json_out:
+        json.dump(complete, json_out)
+
+    shutil.move("../workflow/status.tmp.json", "../workflow/status.json")
+
+
 def main():
 
     config = parse_config("../workflow/config.json")
@@ -474,6 +559,14 @@ def main():
         with tempfile.TemporaryDirectory(prefix=os.path.join(config['tempdir_default'], '')) as temp_dir:
             config['temp_dir'] = temp_dir
             process(config)
+    elif(config['batchsystem'] == afvs_gcpbatch.BATCH_SYSTEM):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--detailed', action='store_true',
+            help="Accepted for symmetry with the AWS path; GCP status is always per subjob")
+        parser.add_argument('--local-object-store', default=None,
+            help="Read output manifests from a filesystem-backed object store rooted here")
+        args = parser.parse_args()
+        process_gcpbatch(config, local_object_store=args.local_object_store)
     else:
         print(f"Configuration with job_storage_mode={config['job_storage_mode']} and batchsystem={config['batchsystem']} is not supported")
 

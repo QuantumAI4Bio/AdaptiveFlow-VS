@@ -36,6 +36,8 @@ import argparse
 from pathlib import Path
 import shutil
 
+import afvs_gcpbatch
+
 
 def parse_config(filename):
 
@@ -148,8 +150,8 @@ def check_parameters(config):
         config['object_store_job_addressing_mode'] = config['job_addressing_mode']
 
 
-    if(empty_value(config, 'job_storage_mode') or (config['job_storage_mode'] != "s3" and config['job_storage_mode'] != "sharedfs")):
-        print("* 'job_storage_mode' must be set to 's3' or 'sharedfs'")
+    if(empty_value(config, 'job_storage_mode') or config['job_storage_mode'] not in ("s3", "gcs", "sharedfs")):
+        print("* 'job_storage_mode' must be set to 's3', 'gcs' or 'sharedfs'")
         error = 1
     else:
         if(config['job_storage_mode'] == "s3"):
@@ -162,16 +164,16 @@ def check_parameters(config):
             else:
                 config['object_store_job_prefix'].rstrip("/")
 
-    if(empty_value(config, 'data_storage_mode') or (config['data_storage_mode'] != "s3" and config['data_storage_mode'] != "sharedfs")):
-        print("* 'job_storage_mode' must be set to 's3' or 'sharedfs'")
+    if(empty_value(config, 'data_storage_mode') or config['data_storage_mode'] not in ("s3", "gcs", "sharedfs")):
+        print("* 'data_storage_mode' must be set to 's3', 'gcs' or 'sharedfs'")
         error = 1
     else:
-        if(config['job_storage_mode'] == "s3"):
+        if(config['data_storage_mode'] in ("s3", "gcs")):
             if(empty_value(config, 'object_store_data_bucket')):
-                print("* 'object_store_data_bucket' must be set if job_storage_mode is 's3'")
+                print(f"* 'object_store_data_bucket' must be set if data_storage_mode is '{config['data_storage_mode']}'")
                 error = 1
             if(empty_value(config, 'object_store_data_collection_prefix')):
-                print("* 'object_store_data_collection_prefix' must be set if job_storage_mode is 's3'")
+                print(f"* 'object_store_data_collection_prefix' must be set if data_storage_mode is '{config['data_storage_mode']}'")
                 error = 1
             else:
                 config['object_store_data_collection_prefix'].rstrip("/")
@@ -209,6 +211,12 @@ def check_parameters(config):
             if(empty_value(config, 'tempdir_default') or config['tempdir_default'] != "/dev/shm/"):
                 print("* RECOMMENDED that 'tempdir_default' be '/dev/shm' if awsbatch is used")
                 error = 1
+        elif(config['batchsystem'] == afvs_gcpbatch.BATCH_SYSTEM):
+            for problem in afvs_gcpbatch.check_config(config):
+                print(problem)
+                error = 1
+            for warning in afvs_gcpbatch.cross_provider_warnings(config):
+                print(f"* WARNING: {warning}")
         elif(config['batchsystem'] == "slurm"):
             if(empty_value(config, 'slurm_template')):
                 print("* 'slurm_template' must be set if batchsystem is 'slurm'")
@@ -222,7 +230,8 @@ def check_parameters(config):
                 print("* 'lsf_template' must be set if batchsystem is 'lsf'")
                 error = 1
         else:
-            print(f"* batchsystem '{config['batchsystem']}' is not supported. Only awsbatch, slurm, bash, and lsf are supported")
+            print(f"* batchsystem '{config['batchsystem']}' is not supported. Only awsbatch, gcpbatch, slurm, bash, and lsf are supported")
+            error = 1
 
 
     if(empty_value(config, 'ligand_library_format')):

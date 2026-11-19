@@ -28,12 +28,14 @@
 # ---------------------------------------------------------------------------
 
 
+import argparse
 import tempfile
 import tarfile
 import os
 import json
 import re
 import boto3
+import botocore
 import logging
 import sys
 from botocore.config import Config
@@ -41,6 +43,10 @@ from pathlib import Path
 import shutil
 import pathlib
 import hashlib
+
+import afvs_gcpbatch
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))
+import afvs_gcs
 
 
 def parse_config(filename):
@@ -129,14 +135,50 @@ def publish_workunit(ctx, index, workunit_subjobs):
         try:
             response = ctx['s3'].upload_file(
                 f'{temp_dir_tar.name}/{index}.tar.gz', ctx['config']['object_store_job_bucket'], object_name)
-        except ClientError as e:
-            logging.error(e)
+        except botocore.exceptions.ClientError as e:
+            # Raised rather than only logged: a workunit whose archive was
+            # never stored cannot be run, and submitting it would queue
+            # tasks that are certain to fail their download.
+            logging.error(f"Failed to upload workunit {index} to "
+                          f"s3://{ctx['config']['object_store_job_bucket']}/{object_name}: {e}")
+            raise
 
 
         temp_dir.cleanup()
         temp_dir_tar.cleanup()
 
         return {'subjobs': compress_subjobs(ctx, workunit_subjobs), 's3_download_path': object_name}
+
+    elif(ctx['config']['job_storage_mode'] == "gcs"):
+
+        object_name = afvs_gcpbatch.gen_job_input_object_name(ctx['config'], index)
+        job_bucket = ctx['config']['object_store_job_bucket']
+
+        local_archive = f'{temp_dir_tar.name}/{index}.tar.gz'
+        metadata = ctx['gcs'].upload_file(local_archive, job_bucket, object_name)
+
+        # Confirm the object is really there before this workunit is
+        # considered publishable. An upload that failed silently would
+        # otherwise only be discovered by the Batch task that cannot find
+        # its input.
+        stored = ctx['gcs'].stat(job_bucket, object_name)
+        local_size = os.path.getsize(local_archive)
+        if int(stored.get('size') or -1) != int(local_size):
+            raise RuntimeError(
+                f"Workunit {index} archive verification failed for "
+                f"{afvs_gcs.format_gcs_uri(job_bucket, object_name)}: "
+                f"stored {stored.get('size')} bytes, local {local_size} bytes")
+
+        temp_dir.cleanup()
+        temp_dir_tar.cleanup()
+
+        return {
+            'subjobs': compress_subjobs(ctx, workunit_subjobs),
+            'gcs_download_path': object_name,
+            'gcs_bucket': job_bucket,
+            'gcs_md5': metadata.get('md5'),
+            'gcs_size': local_size,
+        }
 
     elif(ctx['config']['job_storage_mode'] == "sharedfs"):
         
@@ -277,11 +319,19 @@ def add_collection_to_subjob(ctx, subjob, collection_key, collection_obj):
         subjob['collections'][collection_key]['s3_bucket'] = ctx['config']['object_store_data_bucket']
         subjob['collections'][collection_key]['s3_download_path'] = gen_s3_download_path(ctx, collection_name, collection_number)
 
+    elif(ctx['config']['data_storage_mode'] == "gcs"):
+        # Bucket and object name are kept separate on purpose. A gs:// URI
+        # would be unusable by the filesystem and boto3 readers that the
+        # worker also uses, so none is ever stored here.
+        subjob['collections'][collection_key]['gcs_bucket'] = ctx['config']['object_store_data_bucket']
+        subjob['collections'][collection_key]['gcs_download_path'] = afvs_gcpbatch.gen_gcs_collection_object_name(
+            ctx['config'], collection_name, collection_number)
+
     elif(ctx['config']['data_storage_mode'] == "sharedfs"):
         subjob['collections'][collection_key]['sharedfs_path'] = gen_sharedfs_path(ctx, collection_name, collection_number)
 
     else:
-        print(f"data_storage_mode must be either s3 or sharedfs (currently: {ctx['config']['data_storage_mode']})")
+        print(f"data_storage_mode must be s3, gcs or sharedfs (currently: {ctx['config']['data_storage_mode']})")
         exit(1)
 
     subjob['collections'][collection_key]['dockings'] = dockings_per_ligand * collection_obj['count']
@@ -327,6 +377,8 @@ def process(ctx):
 
     if(config['batchsystem'] == "awsbatch"):
         max_array_job_size = int(config['aws_batch_array_job_size'])
+    elif(config['batchsystem'] == afvs_gcpbatch.BATCH_SYSTEM):
+        max_array_job_size = int(config['gcp_batch_array_job_size'])
     elif(config['batchsystem'] == "slurm"):
         max_array_job_size = int(config['slurm_array_job_size'])
     elif(config['batchsystem'] == "bash"):
@@ -419,12 +471,29 @@ def get_dockings_per_ligand(config):
 
 def main():
 
+    parser = argparse.ArgumentParser(
+        description="Group collections into subjobs and workunits and publish the workunit archives")
+    parser.add_argument('--local-object-store', default=None,
+                        help="Publish to a filesystem-backed object store rooted here instead "
+                             "of Google Cloud Storage (offline verification)")
+    args = parser.parse_args()
+
     ctx = {}
     ctx['config'] = parse_config("../workflow/config.json")
-    aws_config = Config(
-        region_name=ctx['config']['aws_region']
-    )
-    ctx['s3'] = boto3.client('s3', config=aws_config)
+
+    # Storage clients are created only for the storage modes this workflow
+    # actually uses, so a Google Cloud workflow does not require AWS
+    # configuration and a shared-filesystem workflow requires neither.
+    if("s3" in (ctx['config'].get('job_storage_mode'), ctx['config'].get('data_storage_mode'))):
+        aws_config = Config(
+            region_name=ctx['config']['aws_region']
+        )
+        ctx['s3'] = boto3.client('s3', config=aws_config)
+
+    if("gcs" in (ctx['config'].get('job_storage_mode'), ctx['config'].get('data_storage_mode'))):
+        ctx['gcs'] = afvs_gcs.object_store_from_env(
+            project=ctx['config'].get('gcp_project'),
+            local_root=args.local_object_store)
 
     ctx['base_dir'] = pathlib.Path(__file__).parent.resolve()
 

@@ -12,7 +12,17 @@ This is due to the circumstance that AdaptiveFlow operates by using SLURM resour
 
 ## **Google Cloud Platform (GCP)**
 
-To run AdaptiveFlow on the Google Cloud Platform, we recommend to use the GCP version of the Slurm resource manager, which runs out of the box on the GCP. To get started with Slurm on the GCP, we recommend the following page:
+There are two ways to run AdaptiveFlow on the Google Cloud Platform.
+
+### Native Google Cloud Batch
+
+`batchsystem=gcpbatch` submits each workunit directly to [Google Cloud Batch](https://docs.cloud.google.com/batch/docs/get-started), with ligand collections and job data in Google Cloud Storage. No Slurm cluster and no shared filesystem are required: each task fetches its own workunit archive and collections from object storage and publishes its results back.
+
+See [README-GCP.md](../../README-GCP.md) for the setup, the configuration keys, the output layout and the current verification status of that backend. Live submission is disabled unless `gcp_batch_live_transport=1` is set.
+
+### Slurm on GCP
+
+To run AdaptiveFlow on a Slurm cluster on the Google Cloud Platform, we recommend to use the GCP version of the Slurm resource manager, which runs out of the box on the GCP. To get started with Slurm on the GCP, we recommend the following page:
 
 * [https://cloud.google.com/blog/products/compute/hpc-made-easy-announcing-new-features-for-slurm-on-gcp](https://cloud.google.com/blog/products/compute/hpc-made-easy-announcing-new-features-for-slurm-on-gcp)
 
