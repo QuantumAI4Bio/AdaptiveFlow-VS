@@ -411,6 +411,13 @@ def process(config, start, stop, preview=False, status_path="../workflow/status.
 
     submit_type=config['batchsystem']
 
+    if preview and submit_type != afvs_gcpbatch.BATCH_SYSTEM:
+        # Refused before anything is opened for writing. A preview must not
+        # touch the workflow directory at all, not even to re-initialize
+        # the bash run script.
+        raise SystemExit(
+            f"--preview is only available for batchsystem={afvs_gcpbatch.BATCH_SYSTEM}")
+
     client = None
     transport = None
 
@@ -451,9 +458,6 @@ def process(config, start, stop, preview=False, status_path="../workflow/status.
         current_workunit = workunits[jobline_str]
 
         if preview:
-            if submit_type != afvs_gcpbatch.BATCH_SYSTEM:
-                raise SystemExit(
-                    f"--preview is only available for batchsystem={afvs_gcpbatch.BATCH_SYSTEM}")
             subjob_ids = sorted(current_workunit['subjobs'].keys(),
                                 key=lambda value: int(value))
             print(json.dumps(
@@ -500,10 +504,12 @@ def process(config, start, stop, preview=False, status_path="../workflow/status.
     with open(f"{status_path}.tmp", "w") as json_out:
         json.dump(status, json_out, indent=4)
 
-    Path(f"{status_path}.tmp").rename(status_path)
+    Path(f"{status_path}.tmp").replace(status_path)
 
     print("Making copy for status.submission as backup")
-    shutil.copyfile(status_path, "../workflow/status.submission.json")
+    # The backup lives beside the status file it is a backup of, so that
+    # --status points both of them at the same workflow directory.
+    shutil.copyfile(status_path, Path(status_path).parent / "status.submission.json")
 
     print("Done")
 

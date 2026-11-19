@@ -320,6 +320,75 @@ def test_submit_preview_prints_the_job_without_submitting(afvs_tree):
     assert (afvs_tree['root'] / "workflow" / "status.json").read_text() == status_before
 
 
+def test_preview_on_another_batch_system_changes_nothing(afvs_tree):
+    """A refused preview must not have written anything first.
+
+    The bash path re-initializes workflow/run.bash at the start of a
+    submission. A preview is read only, so it has to be refused before
+    that file is opened; otherwise previewing a bash workflow destroys the
+    run script it was only meant to describe.
+    """
+    control = control_file(tempdir_default=afvs_tree['scratch'].as_posix())
+    control = control.replace("batchsystem=gcpbatch", "batchsystem=bash")
+    control = control.replace("job_storage_mode=gcs", "job_storage_mode=sharedfs")
+    control = control.replace("data_storage_mode=gcs", "data_storage_mode=sharedfs")
+    control += "bash_template=./templates/template1.bash\nbash_array_job_size=100\n"
+    (afvs_tree['templates'] / "all.ctrl").write_text(control, encoding="utf-8")
+    (afvs_tree['root'] / "input-files" / "ligand-library").mkdir(parents=True)
+
+    run_tool(afvs_tree, "afvs_prepare_folders.py")
+    run_tool(afvs_tree, "afvs_prepare_workunits.py")
+
+    run_bash = afvs_tree['root'] / "workflow" / "run.bash"
+    run_bash.write_text("#!/usr/bin/env bash\n# a previously generated run script\n",
+                        encoding="utf-8")
+    before = run_bash.read_text()
+
+    result = run_tool(afvs_tree, "afvs_submit_jobs.py", "1", "1", "--preview",
+                      expect_success=False)
+
+    assert result.returncode != 0
+    assert "--preview is only available" in (result.stdout + result.stderr)
+    assert run_bash.read_text() == before
+
+    # The same refusal applies when the jobline does not exist, which the
+    # loop would otherwise never reach.
+    missing = run_tool(afvs_tree, "afvs_submit_jobs.py", "99", "99", "--preview",
+                       expect_success=False)
+
+    assert missing.returncode != 0
+    assert run_bash.read_text() == before
+
+
+def test_submission_status_backup_is_written_beside_the_status_file(afvs_tree, tmp_path):
+    """--status moves the status file and its backup together.
+
+    The backup is a copy of the status file that was just written, so it
+    belongs in the same workflow directory. A hard coded destination would
+    back up a different tree, or none at all.
+    """
+    run_tool(afvs_tree, "afvs_prepare_folders.py")
+    stage_library(afvs_tree)
+    run_tool(afvs_tree, "afvs_prepare_workunits.py",
+             "--local-object-store", str(afvs_tree['object_store_root']))
+
+    alternate = tmp_path / "alternate-workflow"
+    alternate.mkdir()
+    status = json.loads((afvs_tree['root'] / "workflow" / "status.json").read_text())
+    # Already submitted, so no scheduler is involved: this exercises only
+    # the status write and its backup.
+    status['workunits']["1"]['status'] = "SUBMITTED"
+    (alternate / "status.json").write_text(json.dumps(status), encoding="utf-8")
+
+    run_tool(afvs_tree, "afvs_submit_jobs.py", "1", "1", "--status",
+             str(alternate / "status.json"))
+
+    assert (alternate / "status.submission.json").is_file()
+    assert (json.loads((alternate / "status.submission.json").read_text())
+            == json.loads((alternate / "status.json").read_text()))
+    assert not (afvs_tree['root'] / "workflow" / "status.submission.json").exists()
+
+
 def test_submission_is_refused_while_the_live_transport_is_disabled(afvs_tree):
     run_tool(afvs_tree, "afvs_prepare_folders.py")
     stage_library(afvs_tree)
