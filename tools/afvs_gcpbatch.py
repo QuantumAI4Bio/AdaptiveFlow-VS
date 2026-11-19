@@ -115,7 +115,7 @@ DEFAULTS = {
     'gcp_batch_subnetwork': '',
     'gcp_batch_no_external_ip': '1',
     'gcp_batch_live_transport': '0',
-    'gcp_batch_task_scratch_path': '/mnt/scratch',
+    'gcp_batch_task_scratch_path': '/tmp',
 }
 
 
@@ -202,6 +202,24 @@ def check_config(config):
         if not str(merged.get('object_store_data_collection_prefix', "")).strip():
             problems.append(
                 "* 'object_store_data_collection_prefix' must be set if data_storage_mode is 'gcs'")
+
+    scratch = str(merged.get('gcp_batch_task_scratch_path', "")).strip()
+    if not scratch:
+        problems.append("* 'gcp_batch_task_scratch_path' must be set if batchsystem is 'gcpbatch'")
+    elif not scratch.startswith("/"):
+        problems.append(
+            "* 'gcp_batch_task_scratch_path' must be an absolute path inside the task "
+            f"container (got '{scratch}')")
+    elif scratch.startswith("/dev/shm"):
+        # The worker refuses to start with under 1 GiB free in its temp
+        # directory, and a container's /dev/shm is 64 MiB unless the image
+        # or the runnable raises it. AdaptiveFlow sets no container shm
+        # option, so this would fail every task before it read its input.
+        problems.append(
+            "* 'gcp_batch_task_scratch_path' must not be under /dev/shm: a Batch task's "
+            "container provides 64 MiB there, while the worker requires at least 1 GiB "
+            "of free scratch. Use a disk-backed path such as /tmp and size "
+            "'gcp_batch_boot_disk_mib' to hold the collections and poses of one subjob.")
 
     return problems
 
@@ -501,7 +519,11 @@ def task_environment(config, workunit_id, part, extra=None):
         'AFVS_RUN_MODE': BATCH_SYSTEM,
         'AFVS_JOB_STORAGE_MODE': STORAGE_MODE,
         'AFVS_VCPUS': str(config['threads_to_use']),
-        'AFVS_TMP_PATH': str(config.get('tempdir_default', '/dev/shm')),
+        # Not tempdir_default: that is shipped as /dev/shm, which a Batch
+        # container provides at Docker's 64 MiB default while the worker
+        # refuses to start with under 1 GiB free. The scratch path is a
+        # disk-backed directory inside the task instead.
+        'AFVS_TMP_PATH': str(config['gcp_batch_task_scratch_path']),
         'AFVS_RUN_SEQUENTIAL': "0",
         'AFVS_WORKUNIT': str(workunit_id),
         'AFVS_SUBJOB_INDEX_OFFSET': str(part['subjob_index_offset']),

@@ -27,6 +27,21 @@ backend](#status-of-this-backend).
 | `gcp_batch_subjob_timeout` | `maxRunDuration` |
 | `gcp_batch_subjob_retry_count` | `maxRetryCount` |
 
+### Task scratch
+
+A task needs local scratch for its workunit archive, the collections it
+unpacks and the poses it produces, and the worker refuses to start with
+under 1 GiB free. `gcp_batch_task_scratch_path` (default `/tmp`) is that
+directory, and it is what `AFVS_TMP_PATH` is set to.
+
+It deliberately does not follow `tempdir_default`, which is `/dev/shm`.
+That is the right choice on a Slurm node with a large shared-memory
+filesystem, but a Batch task's container provides 64 MiB there, so every
+task would fail its free-space check before reading its input. Keep the
+scratch path on disk and size `gcp_batch_boot_disk_mib` to hold one
+subjob's collections and output. A path under `/dev/shm` is rejected by
+`afvs_prepare_folders.py`.
+
 `taskCount` is always the real number of subjobs in the part. Unlike the
 AWS Batch path, which pads a one-subjob workunit to a two-element array
 and lets the second element exit immediately, Batch accepts

@@ -133,6 +133,15 @@ gcp_batch_no_external_ip=1
 # If a network is configured, run instances without an external IP.
 # Requires Private Google Access or Cloud NAT for storage access
 
+gcp_batch_task_scratch_path=/tmp
+# Directory inside the Batch task used for scratch: the workunit archive,
+# the unpacked collections and the poses before they are uploaded. It must
+# be an absolute, disk-backed path with at least 1 GiB free, because the
+# worker refuses to start otherwise. It deliberately does not follow
+# 'tempdir_default' (/dev/shm): a container provides only 64 MiB there.
+# Size 'gcp_batch_boot_disk_mib' to hold one subjob's collections and
+# output.
+
 gcp_batch_live_transport=0
 # Supported values:
 #   0 : Live submission is disabled. The scheduler integration, job

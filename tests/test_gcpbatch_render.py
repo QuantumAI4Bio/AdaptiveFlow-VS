@@ -72,6 +72,50 @@ def test_defaults_do_not_enable_live_transport(gcp_config):
     assert merged['gcp_batch_live_transport'] == "0"
 
 
+def test_task_scratch_is_disk_backed_not_shared_memory(gcp_config):
+    """AFVS_TMP_PATH must not inherit tempdir_default on Batch.
+
+    tempdir_default is /dev/shm, which is correct on a cluster node and
+    fatal in a container: Batch gives a task 64 MiB there and the worker
+    refuses to start with under 1 GiB free.
+    """
+    gcp_config['tempdir_default'] = "/dev/shm/"
+    part = afvs_gcpbatch.plan_workunit_parts(["0"], 200)[0]
+
+    variables = (afvs_gcpbatch.render_batch_job(gcp_config, "1", part)
+                 ['taskGroups'][0]['taskSpec']['environment']['variables'])
+
+    assert variables['AFVS_TMP_PATH'] == "/tmp"
+    assert not variables['AFVS_TMP_PATH'].startswith("/dev/shm")
+
+
+def test_configured_task_scratch_is_used(gcp_config):
+    gcp_config['gcp_batch_task_scratch_path'] = "/mnt/disks/scratch"
+    part = afvs_gcpbatch.plan_workunit_parts(["0"], 200)[0]
+
+    variables = (afvs_gcpbatch.render_batch_job(gcp_config, "1", part)
+                 ['taskGroups'][0]['taskSpec']['environment']['variables'])
+
+    assert variables['AFVS_TMP_PATH'] == "/mnt/disks/scratch"
+
+
+def test_shared_memory_scratch_is_rejected(gcp_config):
+    gcp_config['gcp_batch_task_scratch_path'] = "/dev/shm"
+
+    problems = afvs_gcpbatch.check_config(gcp_config)
+
+    assert any("gcp_batch_task_scratch_path" in problem and "/dev/shm" in problem
+               for problem in problems)
+
+
+def test_relative_task_scratch_is_rejected(gcp_config):
+    gcp_config['gcp_batch_task_scratch_path'] = "scratch"
+
+    problems = afvs_gcpbatch.check_config(gcp_config)
+
+    assert any("absolute path" in problem for problem in problems)
+
+
 # ---------------------------------------------------------------------------
 # Identity
 # ---------------------------------------------------------------------------
