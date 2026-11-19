@@ -3,3 +3,6 @@
 *.pyc
 .dropbox.attr
 *.attr
+.venv/
+__pycache__/
+.pytest_cache/
