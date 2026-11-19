@@ -57,7 +57,15 @@ import uuid
 
 from typing import Dict, Tuple
 
+import afvs_gcs
+
 logger = logging.getLogger(__name__)
+
+# Directory (relative to the task temp dir) where uploader processes record
+# every object they successfully stored. The parent process reads these
+# records after the uploaders have been joined and only then finalizes the
+# output manifest, so a manifest never claims an object that failed to upload.
+UPLOAD_RECORD_DIR = "upload-records"
 
 def read_config_line(line: str) -> Tuple[str, str]:
     key, sep, value = line.strip().partition("=")
@@ -103,16 +111,12 @@ def format_ligand(ligand_path: str, file_format: str) -> str:
 
 def downloader(download_queue, unpack_queue, summary_queue, tmp_dir):
 
-
-    botoconfig = Config(
-       retries = {
-          'max_attempts': 25,
-          'mode': 'standard'
-       }
-    )
-
-    s3 = boto3.client('s3', config=botoconfig)
-
+    # The S3 and GCS clients are created on first use. A client for a cloud
+    # that this run does not use would otherwise fail to construct (for
+    # example boto3 raises NoRegionError inside a Google Cloud Batch task,
+    # where no AWS region is configured).
+    s3 = None
+    gcs = None
 
     while True:
         try:
@@ -127,11 +131,51 @@ def downloader(download_queue, unpack_queue, summary_queue, tmp_dir):
         item['temp_dir'] = tempfile.mkdtemp(prefix=f"{tmp_dir}/")
         item['local_path'] = f"{item['temp_dir']}/tmp.{item['ext']}"
 
-        # Move the data either from S3 or a shared filesystem
+        # Move the data from S3, from GCS or from a shared filesystem
 
-        if('s3_download_path' in item['collection']):
+        if('gcs_download_path' in item['collection']):
+            remote_path = item['collection']['gcs_download_path']
+            data_bucket = item['collection']['gcs_bucket']
+
+            if gcs is None:
+                gcs = afvs_gcs.object_store_from_env(
+                    project=os.getenv('AFVS_GCP_PROJECT') or None)
+
+            try:
+                # Verify the archive against the object's own size and MD5
+                # before it reaches the unpacker, so a truncated download
+                # is reported as a failed download rather than as a corrupt
+                # tar file later on.
+                gcs.download_and_verify(data_bucket, remote_path, item['local_path'])
+            except (afvs_gcs.ObjectStoreError, OSError) as error:
+                reason = (f"Failed to download from GCS "
+                          f"{afvs_gcs.format_gcs_uri(data_bucket, remote_path)} "
+                          f"to {item['local_path']}: ({error})")
+                logging.error(reason)
+
+                summary_item = {
+                    'type': "download_failed",
+                    'log': {
+                        'base_collection_key': item['collection_key'],
+                        'reason': reason,
+                        'dockings': item['collection']['dockings']
+                    }
+                }
+                summary_queue.put(summary_item)
+                continue
+
+        elif('s3_download_path' in item['collection']):
             remote_path = item['collection']['s3_download_path']
             job_bucket = item['collection']['s3_bucket']
+
+            if s3 is None:
+                botoconfig = Config(
+                   retries = {
+                      'max_attempts': 25,
+                      'mode': 'standard'
+                   }
+                )
+                s3 = boto3.client('s3', config=botoconfig)
 
             try:
                 with open(item['local_path'], 'wb') as f:
@@ -815,17 +859,115 @@ def generate_output_path(ctx, scenario_key, content_type, extension):
 
 
     if scenario_key != None:
-        if(ctx['main_config']['job_storage_mode'] == "s3"):
+        if(ctx['main_config']['job_storage_mode'] in ("s3", "gcs")):
             return f"{ctx['main_config']['object_store_job_prefix']}/{ctx['main_config']['job_name']}/{scenario_key}/{content_type}/{ctx['workunit_id']}/{ctx['subjob_id']}.{extension}"
         else:
             outputfiles_dir = Path(ctx['main_config']['sharedfs_output_files_path']) / scenario_key / content_type / str(ctx['workunit_id'])
             return f"{ctx['main_config']['sharedfs_output_files_path']}/{scenario_key}/{content_type}/{ctx['workunit_id']}/{ctx['subjob_id']}.{extension}"
     else:
-        if(ctx['main_config']['job_storage_mode'] == "s3"):
+        if(ctx['main_config']['job_storage_mode'] in ("s3", "gcs")):
             return f"{ctx['main_config']['object_store_job_prefix']}/{ctx['main_config']['job_name']}/{content_type}/{ctx['workunit_id']}/{ctx['subjob_id']}.{extension}"
         else:
             outputfiles_dir = Path(ctx['main_config']['sharedfs_output_files_path']) / content_type / str(ctx['workunit_id'])
             return f"{ctx['main_config']['sharedfs_output_files_path']}/{content_type}/{ctx['workunit_id']}/{ctx['subjob_id']}.{extension}"
+
+
+def generate_attempt_output_path(ctx, content_type, extension):
+    """Path for an artifact published under this task attempt's own prefix.
+
+    Every attempt of a task keeps its own copy of the summary, the overview
+    and the per-scenario log/pose archives. A retry therefore cannot erase
+    the evidence from the attempt that preceded it, and a late-finishing
+    attempt of an already completed task cannot silently replace its
+    artifacts.
+    """
+    base = f"{ctx['main_config']['object_store_job_prefix']}/{ctx['main_config']['job_name']}"
+    return (f"{base}/attempts/{ctx['workunit_id']}/{ctx['subjob_id']}/"
+            f"{ctx['attempt_id']}/{content_type}.{extension}")
+
+
+def record_upload(ctx, record):
+    """Records one successfully stored object for later manifest finalization."""
+    record_dir = Path(ctx['temp_dir']) / UPLOAD_RECORD_DIR
+    record_dir.mkdir(parents=True, exist_ok=True)
+    record_path = record_dir / f"{uuid.uuid4().hex}.json"
+    with open(record_path, "w") as json_out:
+        json.dump(record, json_out)
+
+
+def read_overview_counts(ctx):
+    """Reads the docking counts the summary process recorded for this task."""
+    counts_path = Path(ctx['temp_dir']) / "overview-counts.json"
+    if not counts_path.is_file():
+        return {}
+    try:
+        with open(counts_path, "r") as read_file:
+            return json.load(read_file)
+    except (OSError, json.JSONDecodeError) as error:
+        logging.error(f"Could not read overview counts sidecar: {error}")
+        return {}
+
+
+def collect_upload_records(ctx):
+    """Returns every upload record written during this task attempt."""
+    record_dir = Path(ctx['temp_dir']) / UPLOAD_RECORD_DIR
+    if not record_dir.is_dir():
+        return []
+
+    records = []
+    for record_path in sorted(record_dir.glob("*.json")):
+        try:
+            with open(record_path, "r") as read_file:
+                records.append(json.load(read_file))
+        except (OSError, json.JSONDecodeError) as error:
+            logging.error(f"Could not read upload record {record_path}: {error}")
+    return records
+
+
+def finalize_output_manifest(ctx):
+    """Writes the output manifest for this subjob after all uploads succeeded.
+
+    The manifest is the authoritative statement that a subjob produced
+    complete output. It is written last and only once the uploader
+    processes have exited cleanly, so its presence means every object it
+    lists was stored.
+    """
+    if ctx['main_config']['job_storage_mode'] != "gcs":
+        return None
+
+    records = collect_upload_records(ctx)
+    objects = [record for record in records if record.get('canonical')]
+
+    manifest = {
+        'workunit_id': str(ctx['workunit_id']),
+        'subjob_id': str(ctx['subjob_id']),
+        'attempt_id': ctx['attempt_id'],
+        'attempt_index': ctx['attempt_index'],
+        'attempt_uid': ctx['attempt_uid'],
+        'provider': os.getenv('AFVS_RUN_MODE', ""),
+        'job_name': ctx['main_config']['job_name'],
+        'scenarios': sorted(ctx['main_config']['docking_scenarios'].keys()),
+        'dockings': ctx.get('docking_counts', {}),
+        'objects': objects,
+        'attempt_objects': [record for record in records if not record.get('canonical')],
+        'finalized_at': time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    }
+
+    bucket = ctx['main_config']['object_store_job_bucket']
+    object_name = (f"{ctx['main_config']['object_store_job_prefix']}/"
+                   f"{ctx['main_config']['job_name']}/manifests/"
+                   f"{ctx['workunit_id']}/{ctx['subjob_id']}.json")
+
+    store = afvs_gcs.object_store_from_env(project=os.getenv('AFVS_GCP_PROJECT') or None)
+
+    with tempfile.TemporaryDirectory(prefix=os.path.join(ctx['temp_dir'], '')) as manifest_dir:
+        local_path = os.path.join(manifest_dir, "manifest.json")
+        with open(local_path, "w") as json_out:
+            json.dump(manifest, json_out, indent=2)
+        store.upload_file(local_path, bucket, object_name)
+
+    print(f"Finalized output manifest {afvs_gcs.format_gcs_uri(bucket, object_name)}")
+    return manifest
 
 
 def generate_output_archives(ctx, upload_queue, scenario_directories):
@@ -846,6 +988,13 @@ def generate_output_archives(ctx, upload_queue, scenario_directories):
             'temp_dir': upload_tmp_dir
         }
 
+        if ctx['main_config']['job_storage_mode'] == "gcs":
+            uploader_item['gcs_bucket'] = ctx['main_config']['object_store_job_bucket']
+            uploader_item['attempt_remote_path'] = generate_attempt_output_path(
+                ctx, f"logs-{scenario_key}", "tar.gz")
+            uploader_item['content_type'] = "logs"
+            uploader_item['scenario_key'] = scenario_key
+
         upload_queue.put(uploader_item)
 
 
@@ -857,6 +1006,23 @@ def generate_overview_file(ctx, overview_data, upload_queue):
     with gzip.open(overview_json_location, "wt") as json_out:
         json.dump(overview_data, json_out)
 
+    # Sidecar copy of the counts, read by the parent process when it
+    # finalizes the output manifest. The summary process runs in its own
+    # process, so these counts cannot be returned in memory.
+    counts_path = Path(ctx['temp_dir']) / "overview-counts.json"
+    try:
+        with open(counts_path, "w") as counts_out:
+            json.dump({
+                'total': overview_data['total_dockings'],
+                'succeeded': overview_data['dockings_status']['success'],
+                'failed': overview_data['dockings_status']['failed'],
+                'skipped': overview_data['skipped_ligands'],
+                'failed_downloads': overview_data['failed_downloads'],
+                'failed_downloads_dockings': overview_data['failed_downloads_dockings'],
+            }, counts_out)
+    except OSError as error:
+        logging.error(f"Could not write overview counts sidecar: {error}")
+
     uploader_item = {
         'storage_type': ctx['main_config']['job_storage_mode'],
         'remote_path' : generate_output_path(ctx, None, "summary", "json.gz"),
@@ -864,6 +1030,12 @@ def generate_overview_file(ctx, overview_data, upload_queue):
         'local_path': overview_json_location,
         'temp_dir': upload_tmp_dir
     }
+
+    if ctx['main_config']['job_storage_mode'] == "gcs":
+        uploader_item['gcs_bucket'] = ctx['main_config']['object_store_job_bucket']
+        uploader_item['attempt_remote_path'] = generate_attempt_output_path(
+            ctx, "summary", "json.gz")
+        uploader_item['content_type'] = "summary"
 
     upload_queue.put(uploader_item)
 
@@ -923,6 +1095,12 @@ def generate_summary_file(ctx, summary_data, upload_queue, tmp_dir):
                 'temp_dir': upload_tmp_dir
             }
 
+            if ctx['main_config']['job_storage_mode'] == "gcs":
+                uploader_item['gcs_bucket'] = ctx['main_config']['object_store_job_bucket']
+                uploader_item['attempt_remote_path'] = generate_attempt_output_path(
+                    ctx, f"parquet-{scenario_key}", "parquet")
+                uploader_item['content_type'] = "parquet"
+                uploader_item['scenario_key'] = scenario_key
 
             df.to_parquet(uploader_item['local_path'], compression='gzip')
             upload_queue.put(uploader_item)
@@ -954,6 +1132,14 @@ def generate_summary_file(ctx, summary_data, upload_queue, tmp_dir):
                 'local_path': f"{upload_tmp_dir}/summary.txt.gz",
                 'temp_dir': upload_tmp_dir
             }
+
+            if ctx['main_config']['job_storage_mode'] == "gcs":
+                uploader_item_csv['gcs_bucket'] = ctx['main_config']['object_store_job_bucket']
+                uploader_item_csv['attempt_remote_path'] = generate_attempt_output_path(
+                    ctx, f"csv-{scenario_key}", "csv.gz")
+                uploader_item_csv['content_type'] = "csv"
+                uploader_item_csv['scenario_key'] = scenario_key
+
             upload_queue.put(uploader_item_csv)
 
 
@@ -962,14 +1148,10 @@ def upload_process(ctx, upload_queue):
 
     print('Uploader: Running', flush=True)
 
-    botoconfig = Config(
-       retries = {
-          'max_attempts': 25,
-          'mode': 'standard'
-       }
-    )
-
-    s3 = boto3.client('s3', config=botoconfig)
+    # Created on first use so that a run on one cloud does not require the
+    # other cloud's client to be configurable.
+    s3 = None
+    gcs = None
 
     while True:
         try:
@@ -988,12 +1170,56 @@ def upload_process(ctx, upload_queue):
         # Basically.. if s3 then use boto3
 
         if(item['storage_type'] == "s3"):
+            if s3 is None:
+                botoconfig = Config(
+                   retries = {
+                      'max_attempts': 25,
+                      'mode': 'standard'
+                   }
+                )
+                s3 = boto3.client('s3', config=botoconfig)
+
             try:
                 print(f"Uploading to {item['remote_path']}")
                 response = s3.upload_file(item['local_path'], item['s3_bucket'], item['remote_path'])
             except botocore.exceptions.ClientError as e:
                 logging.error(e)
                 raise
+
+        elif(item['storage_type'] == "gcs"):
+            if gcs is None:
+                gcs = afvs_gcs.object_store_from_env(
+                    project=os.getenv('AFVS_GCP_PROJECT') or None)
+
+            bucket = item['gcs_bucket']
+
+            # The attempt-scoped copy is stored first. If the canonical
+            # upload then fails, the attempt's evidence still exists and
+            # no manifest is finalized for this attempt.
+            if item.get('attempt_remote_path'):
+                attempt_metadata = gcs.upload_file(
+                    item['local_path'], bucket, item['attempt_remote_path'])
+                record_upload(ctx, {
+                    'bucket': bucket,
+                    'object_name': item['attempt_remote_path'],
+                    'size': attempt_metadata.get('size'),
+                    'md5': attempt_metadata.get('md5'),
+                    'content_type': item.get('content_type'),
+                    'scenario_key': item.get('scenario_key'),
+                    'canonical': False,
+                })
+
+            print(f"Uploading to {afvs_gcs.format_gcs_uri(bucket, item['remote_path'])}")
+            metadata = gcs.upload_file(item['local_path'], bucket, item['remote_path'])
+            record_upload(ctx, {
+                'bucket': bucket,
+                'object_name': item['remote_path'],
+                'size': metadata.get('size'),
+                'md5': metadata.get('md5'),
+                'content_type': item.get('content_type'),
+                'scenario_key': item.get('scenario_key'),
+                'canonical': True,
+            })
 
         else:
             # if sharedfs.. .then just do a copy
@@ -1100,6 +1326,58 @@ def get_workunit_from_s3(ctx, workunit_id, subjob_id, job_bucket, job_object, do
 
     ctx['main_config'] = all_config['config']
 
+
+
+def get_workunit_from_gcs(ctx, workunit_id, subjob_id, job_bucket, job_object, download_dir):
+    """Fetches and verifies this task's workunit archive from GCS.
+
+    The archive is verified against the object's recorded size and MD5
+    before it is opened, so a partial download fails here with a clear
+    reason instead of producing an unreadable tar file.
+    """
+    download_to_workunit_file = "/".join([download_dir, "afvs_input.tar.gz"])
+
+    try:
+        ctx['gcs'].download_and_verify(job_bucket, job_object, download_to_workunit_file)
+    except afvs_gcs.ObjectNotFound as error:
+        logging.error(
+            f"Workunit archive missing: "
+            f"{afvs_gcs.format_gcs_uri(job_bucket, job_object)} ({error})")
+        sys.exit(1)
+    except afvs_gcs.ObjectStoreError as error:
+        logging.error(
+            f"Failed to fetch workunit archive "
+            f"{afvs_gcs.format_gcs_uri(job_bucket, job_object)} "
+            f"to {download_to_workunit_file}: ({error})")
+        sys.exit(1)
+
+    os.chdir(download_dir)
+
+    # Get the file with the specific workunit we need to work on
+    try:
+        tar = tarfile.open(download_to_workunit_file)
+        tar.extractall()
+        file = tar.extractfile(f"af_input/config.json")
+
+        all_config = json.load(file)
+        if(subjob_id in all_config['subjobs']):
+            ctx['subjob_config'] = all_config['subjobs'][subjob_id]
+        else:
+            logging.error(f"There is no subjob ID with ID:{subjob_id}")
+            # Google Cloud Batch sizes taskCount from the real number of
+            # subjobs, so a task index that has no subjob means the
+            # workunit and the submitted job have diverged.
+            sys.exit(1)
+
+        tar.close()
+    except SystemExit:
+        raise
+    except Exception as err:
+        logging.error(
+            f"ERR: Cannot open {download_to_workunit_file}. type: {str(type(err))}, err: {str(err)}")
+        sys.exit(1)
+
+    ctx['main_config'] = all_config['config']
 
 
 def get_workunit_from_sharedfs(ctx, workunit_id, subjob_id, job_tar, download_dir):
@@ -4039,13 +4317,33 @@ DOCKING_PROGRAMS = {
 
 def get_workunit_information():
 
-    workunit_id = os.getenv('AFVS_WORKUNIT','') 
+    workunit_id = os.getenv('AFVS_WORKUNIT','')
     subjob_id = os.getenv('AFVS_WORKUNIT_SUBJOB','')
 
     if(workunit_id == "" or subjob_id == ""):
         raise RuntimeError(f"Invalid AFVS_WORKUNIT and/or AFVS_WORKUNIT_SUBJOB")
 
     return workunit_id, subjob_id
+
+
+def get_attempt_information():
+    """Identifies this attempt of this task.
+
+    Google Cloud Batch retries a failed task in place, so the attempt has
+    to be part of the output addressing. The retry counter is used when the
+    provider exposes it; a per-process unique suffix is always added so two
+    attempts can never write to the same attempt prefix even if the
+    counter is unavailable.
+    """
+    raw_attempt = os.getenv('BATCH_TASK_RETRY_ATTEMPT', os.getenv('AFVS_ATTEMPT_INDEX', '0'))
+    try:
+        attempt_index = int(str(raw_attempt).strip())
+    except ValueError:
+        attempt_index = 0
+
+    attempt_uid = os.getenv('AFVS_ATTEMPT_UID', '') or uuid.uuid4().hex[:8]
+
+    return attempt_index, attempt_uid, f"{attempt_index:02d}-{attempt_uid}"
 
 
 def setup_job_storage_mode(ctx):
@@ -4068,22 +4366,38 @@ def setup_job_storage_mode(ctx):
         # Get the config information
         ctx['s3'] = boto3.client('s3', config=botoconfig)
     
+    elif(ctx['job_storage_mode'] == "gcs"):
+
+        ctx['job_object'] = os.getenv('AFVS_CONFIG_JOB_GCS_OBJECT')
+        ctx['job_bucket'] = os.getenv('AFVS_CONFIG_JOB_GCS_BUCKET')
+
+        if(not ctx['job_object'] or not ctx['job_bucket']):
+            raise RuntimeError(
+                "AFVS_CONFIG_JOB_GCS_BUCKET and AFVS_CONFIG_JOB_GCS_OBJECT must be set "
+                "when AFVS_JOB_STORAGE_MODE is 'gcs'")
+
+        ctx['gcs'] = afvs_gcs.object_store_from_env(
+            project=os.getenv('AFVS_GCP_PROJECT') or None)
+
     elif(ctx['job_storage_mode'] == "sharedfs"):
         ctx['job_tar'] = os.getenv('AFVS_CONFIG_JOB_TGZ')
     else:
-        raise RuntimeError(f"Invalid jobstoragemode of {ctx['job_storage_mode']}. AFVS_JOB_STORAGE_MODE must be 's3' or 'sharedfs' ")
+        raise RuntimeError(f"Invalid jobstoragemode of {ctx['job_storage_mode']}. AFVS_JOB_STORAGE_MODE must be 's3', 'gcs' or 'sharedfs' ")
 
 
 def get_subjob_config(ctx, workunit_id, subjob_id):
 
     if(ctx['job_storage_mode'] == "s3"):
-        get_workunit_from_s3(ctx, workunit_id, subjob_id, 
+        get_workunit_from_s3(ctx, workunit_id, subjob_id,
+            ctx['job_bucket'], ctx['job_object'], ctx['temp_dir'])
+    elif(ctx['job_storage_mode'] == "gcs"):
+        get_workunit_from_gcs(ctx, workunit_id, subjob_id,
             ctx['job_bucket'], ctx['job_object'], ctx['temp_dir'])
     elif(ctx['job_storage_mode'] == "sharedfs"):
         get_workunit_from_sharedfs(ctx, workunit_id, subjob_id,
             ctx['job_tar'], ctx['temp_dir'])
     else:
-        raise RuntimeError(f"Invalid jobstoragemode of {ctx['job_storage_mode']}. AFVS_JOB_STORAGE_MODE must be 's3' or 'sharedfs' ")
+        raise RuntimeError(f"Invalid jobstoragemode of {ctx['job_storage_mode']}. AFVS_JOB_STORAGE_MODE must be 's3', 'gcs' or 'sharedfs' ")
 
 
 
@@ -4098,9 +4412,13 @@ def process(ctx):
 
     workunit_id, subjob_id =  get_workunit_information()
 
-    # Setup paths appropriately depending on if we are using S3
+    # Which attempt of this task is running. Used to address attempt-scoped
+    # output so retries do not overwrite each other.
+    ctx['attempt_index'], ctx['attempt_uid'], ctx['attempt_id'] = get_attempt_information()
+
+    # Setup paths appropriately depending on if we are using S3, GCS
     # or a shared FS
-    
+
     setup_job_storage_mode(ctx)
 
     # This includes all of the configuration information we need
@@ -4116,7 +4434,11 @@ def process(ctx):
     ctx['workunit_id'] = workunit_id
     ctx['subjob_id'] = subjob_id
 
+    # Clients are not shared with the worker processes: each one builds its
+    # own on first use, which keeps this context picklable and avoids
+    # sharing a connection pool across processes.
     ctx.pop('s3', None)
+    ctx.pop('gcs', None)
 
     print(ctx['temp_dir'])
 
@@ -4219,6 +4541,14 @@ def process(ctx):
         flush_queue(docking_queue, docking_processes, "docking")
         flush_queue(summary_queue, summary_processes, "summary")
         flush_queue(upload_queue, uploader_processes, "upload")
+
+        # Every uploader exited cleanly, so the stored objects are known
+        # good and the manifest can be finalized. An upload failure raises
+        # out of flush_queue above and leaves no manifest behind, which is
+        # how a partially written subjob stays distinguishable from a
+        # complete one.
+        ctx['docking_counts'] = read_overview_counts(ctx)
+        finalize_output_manifest(ctx)
     except Exception as e:
         logging.error(f"Received exception {e}, terminating")
 
