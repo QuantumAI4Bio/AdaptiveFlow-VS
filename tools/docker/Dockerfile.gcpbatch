@@ -42,8 +42,11 @@ RUN apt-get update \
 
 # Pinned so a rebuild of the same Dockerfile produces the same worker
 # dependency set. google-cloud-storage is what the gcs job storage mode
-# and the gcs ligand library mode use.
+# and the gcs ligand library mode use. boto3 is imported unconditionally
+# by afvs_run.py and is also what reads an S3 ligand library from a Batch
+# task, so the worker cannot start without it.
 RUN pip install --no-cache-dir \
+        boto3==1.44.6 \
         google-cloud-storage==3.17.1 \
         pandas==2.3.3 \
         pyarrow==22.0.0

@@ -11,8 +11,11 @@ No test in this module reaches a network: the object store is local and
 the autouse guard in conftest fails any attempt to build a cloud client.
 """
 
+import ast
 import gzip
 import json
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -510,6 +513,63 @@ def test_object_store_rejects_a_uri_where_a_key_is_expected(object_store):
 def test_object_store_rejects_path_traversal(object_store):
     with pytest.raises(afvs_gcs.ObjectStoreError):
         object_store.stat("fixture-job-bucket", "a/../../etc/passwd")
+
+
+# ---------------------------------------------------------------------------
+# Worker image
+# ---------------------------------------------------------------------------
+
+#: The Python distribution that provides each third-party module the worker
+#: imports at module scope.
+WORKER_IMPORT_DISTRIBUTIONS = {
+    'boto3': "boto3",
+    'botocore': "boto3",
+    'pandas': "pandas",
+}
+
+
+def _module_scope_imports(path):
+    """Returns the top level module names a source file imports at module scope."""
+    tree = ast.parse(Path(path).read_text(encoding="utf-8"))
+
+    modules = set()
+    for node in tree.body:
+        if isinstance(node, ast.Import):
+            modules.update(alias.name.split(".")[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+            modules.add(node.module.split(".")[0])
+    return modules
+
+
+def test_worker_image_installs_every_module_the_worker_imports():
+    """The gcpbatch worker image must satisfy afvs_run.py's own imports.
+
+    afvs_run.py imports boto3 and botocore at module scope whatever the
+    job storage mode is, so an image that does not install them fails at
+    import and every Batch task dies before it reads its workunit.
+    """
+    tools_dir = Path(afvs_gcpbatch.__file__).resolve().parent
+    templates_dir = tools_dir / "templates"
+    dockerfile = (tools_dir / "docker" / "Dockerfile.gcpbatch").read_text(encoding="utf-8")
+
+    required = set()
+    for name in ("afvs_run.py", "afvs_gcs.py"):
+        for module in _module_scope_imports(templates_dir / name):
+            if module in sys.stdlib_module_names:
+                continue
+            if (templates_dir / f"{module}.py").is_file():
+                continue
+            assert module in WORKER_IMPORT_DISTRIBUTIONS, (
+                f"{name} imports {module} at module scope; record which "
+                f"distribution provides it")
+            required.add(WORKER_IMPORT_DISTRIBUTIONS[module])
+
+    assert "boto3" in required, "expected the worker to import boto3 at module scope"
+
+    for distribution in sorted(required):
+        assert f"{distribution}==" in dockerfile, (
+            f"{distribution} is imported by the worker but is not installed by "
+            f"Dockerfile.gcpbatch")
 
 
 def test_gs_uri_helpers_round_trip():
