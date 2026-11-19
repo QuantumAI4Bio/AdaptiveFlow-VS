@@ -1156,7 +1156,12 @@ def reconcile_manifests(config, object_store, workunit_id, expected_subjob_ids):
     present = 0
     dockings = {'total': 0, 'succeeded': 0, 'failed': 0, 'skipped': 0}
 
-    for subjob_id in [str(value) for value in expected_subjob_ids]:
+    # Materialized once: the expected subjobs are both walked and counted,
+    # and an iterator would be empty by the time it is counted, which would
+    # report a partial workunit as complete.
+    expected = [str(value) for value in expected_subjob_ids]
+
+    for subjob_id in expected:
         manifest = read_manifest(config, object_store, workunit_id, subjob_id)
         if manifest is None:
             subjobs[subjob_id] = {'status': "missing"}
@@ -1186,7 +1191,7 @@ def reconcile_manifests(config, object_store, workunit_id, expected_subjob_ids):
             'dockings': counts,
         }
 
-    expected_count = len(list(expected_subjob_ids))
+    expected_count = len(expected)
     if present == 0:
         state = "empty"
     elif present < expected_count:

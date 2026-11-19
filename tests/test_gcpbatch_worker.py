@@ -270,6 +270,29 @@ def test_manifest_reconciliation_distinguishes_empty_partial_and_complete(
     assert complete['dockings']['succeeded'] == 4
 
 
+def test_manifest_reconciliation_counts_every_expected_subjob(
+        gcp_config, staged_workunit, object_store, tmp_path):
+    """The expected subjobs are counted, however they were handed over.
+
+    reconcile_manifests both walks and counts the expected subjobs. If it
+    consumed them once, the count would be zero and a workunit with one
+    finished subjob out of two would be reported as complete.
+    """
+    workunit_id = staged_workunit['workunit_id']
+    subjob_ids = staged_workunit['subjob_ids']
+
+    replay.replay_task(gcp_config, workunit_id, subjob_ids[0], object_store,
+                       replay.make_scratch(tmp_path, "counted"))
+
+    report = afvs_gcpbatch.reconcile_manifests(
+        gcp_config, object_store, workunit_id,
+        (subjob_id for subjob_id in subjob_ids))
+
+    assert report['expected_subjobs'] == 2
+    assert report['complete_subjobs'] == 1
+    assert report['state'] == "partial"
+
+
 def test_manifest_reconciliation_detects_a_deleted_result_object(
         gcp_config, staged_workunit, object_store, tmp_path):
     workunit_id = staged_workunit['workunit_id']
