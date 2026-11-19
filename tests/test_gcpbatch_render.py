@@ -247,6 +247,13 @@ def test_task_environment_carries_the_subjob_offset(gcp_config):
 
 
 def test_job_environment_never_carries_credentials(gcp_config):
+    # Secrets that a real control file can end up holding, so that this
+    # asserts the renderer copies named keys rather than the whole
+    # configuration, instead of only that the fixture has no secrets.
+    gcp_config['aws_access_key_id'] = "AKIAFIXTUREACCESSKEY"
+    gcp_config['aws_secret_access_key'] = "fixture-secret-access-key-value"
+    gcp_config['gcp_service_account_private_key'] = "fixture-private-key-value"
+
     part = afvs_gcpbatch.plan_workunit_parts(["0"], 200)[0]
 
     rendered = json.dumps(afvs_gcpbatch.render_batch_job(gcp_config, "1", part)).lower()
@@ -254,6 +261,10 @@ def test_job_environment_never_carries_credentials(gcp_config):
     for forbidden in ("secret", "password", "private_key", "access_key", "session_token",
                       "bearer", "credential"):
         assert forbidden not in rendered
+
+    for value in ("AKIAFIXTUREACCESSKEY", "fixture-secret-access-key-value",
+                  "fixture-private-key-value"):
+        assert value.lower() not in rendered
 
 
 def test_network_policy_is_only_rendered_when_configured(gcp_config):
