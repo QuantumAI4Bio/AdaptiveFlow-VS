@@ -46,7 +46,7 @@ import logging
 import os
 import re
 import shutil
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +127,11 @@ def validate_object_name(object_name):
     if name == "":
         raise ObjectStoreError("Object name must not be empty")
 
-    if Path(name).is_absolute() or Path(name).drive:
+    if PureWindowsPath(name).is_absolute() or PureWindowsPath(name).drive:
+        # Windows path semantics are checked on every platform: pathlib
+        # only recognizes a drive letter in a Windows path, so a POSIX
+        # host would otherwise accept a name that escapes the store as
+        # soon as the same local store is read on Windows.
         raise ObjectStoreError(
             f"Object name must be relative, not an absolute path: {name!r}")
 
