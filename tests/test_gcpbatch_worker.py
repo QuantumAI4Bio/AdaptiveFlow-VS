@@ -538,6 +538,28 @@ def test_object_store_rejects_path_traversal(object_store):
         object_store.stat("fixture-job-bucket", "a/../../etc/passwd")
 
 
+@pytest.mark.parametrize("object_name", [
+    "a\\..\\..\\escaped.txt",
+    "..\\escaped.txt",
+    "C:/escaped.txt",
+])
+def test_object_store_rejects_names_that_escape_the_store(object_store, tmp_path, object_name):
+    """A name that is only a path separator on one platform is still rejected.
+
+    The filesystem-backed store resolves an object name against its root,
+    so a backslash separator or a drive letter would place the object
+    outside the store on Windows. Object names are validated rather than
+    being trusted to be plain keys.
+    """
+    with pytest.raises(afvs_gcs.ObjectStoreError):
+        object_store.stat("fixture-job-bucket", object_name)
+
+    payload = tmp_path / "payload.txt"
+    payload.write_text("payload", encoding="utf-8")
+    with pytest.raises(afvs_gcs.ObjectStoreError):
+        object_store.upload_file(payload, "fixture-job-bucket", object_name)
+
+
 # ---------------------------------------------------------------------------
 # Worker image
 # ---------------------------------------------------------------------------

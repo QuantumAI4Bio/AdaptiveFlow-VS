@@ -115,10 +115,21 @@ def validate_object_name(object_name):
         raise ObjectStoreError(
             f"Object name must be a bare object key, not a URI: {name!r}")
 
+    if "\\" in name:
+        # A backslash is a path separator on Windows, so it would escape
+        # the filesystem-backed store that the offline and local
+        # verification runs use. AFVS object names never contain one.
+        raise ObjectStoreError(
+            f"Object name must use '/' separators only: {name!r}")
+
     name = name.lstrip("/")
 
     if name == "":
         raise ObjectStoreError("Object name must not be empty")
+
+    if Path(name).is_absolute() or Path(name).drive:
+        raise ObjectStoreError(
+            f"Object name must be relative, not an absolute path: {name!r}")
 
     parts = name.split("/")
     if any(part in ("", ".", "..") for part in parts):
