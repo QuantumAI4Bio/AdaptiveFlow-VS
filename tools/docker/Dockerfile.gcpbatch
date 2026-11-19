@@ -1,0 +1,65 @@
+# Copyright (C) 2019 Christoph Gorgulla
+#
+# This file is part of AdaptiveFlow.
+#
+# AdaptiveFlow is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# AdaptiveFlow is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with AdaptiveFlow.  If not, see <https://www.gnu.org/licenses/>.
+
+# ---------------------------------------------------------------------------
+#
+# AdaptiveFlow worker image for native Google Cloud Batch.
+#
+# Build context is the tools/ directory, as for the AWS image:
+#
+#   cd tools
+#   docker build -f docker/Dockerfile.gcpbatch -t afvs-worker:<tag> .
+#
+# The image is CPU only. No GPU runtime is installed because this release
+# enables qvina02, which is a CPU engine. Pin an immutable tag or a digest
+# in gcp_batch_worker_image so that a campaign cannot change engine
+# versions between workunits.
+#
+# ---------------------------------------------------------------------------
+
+FROM python:3.12-slim-bookworm
+
+# The docking binaries shipped in tools/bin are statically linked ELF
+# x86-64 executables, so the image only needs a C library and the Python
+# dependencies of the worker.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pinned so a rebuild of the same Dockerfile produces the same worker
+# dependency set. google-cloud-storage is what the gcs job storage mode
+# and the gcs ligand library mode use.
+RUN pip install --no-cache-dir \
+        google-cloud-storage==3.17.1 \
+        pandas==2.3.3 \
+        pyarrow==22.0.0
+
+ADD ./bin /opt/af/tools/bin
+ADD ./templates/*.py /opt/af/tools/templates/
+ADD ./templates/*.sh /opt/af/tools/templates/
+
+RUN chmod +x -R /opt/af/tools/templates/*.sh /opt/af/tools/templates/*.py \
+    && chmod +x -R /opt/af/tools/bin
+
+ENV AFVS_TOOLS_PATH=/opt/af/tools/bin
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /opt/af/tools/templates
+
+# Google Cloud Batch sets BATCH_TASK_INDEX; the entrypoint translates it
+# into the AFVS subjob ID using the submitted index offset.
+ENTRYPOINT ["/opt/af/tools/templates/template1.gcpbatch.sh"]
